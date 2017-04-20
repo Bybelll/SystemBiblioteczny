@@ -1,23 +1,31 @@
 package SystemB;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import javax.swing.*;
+import java.sql.*;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+
 
 public class WindowSignIn extends JFrame implements ActionListener{
 
 	JButton bSignIn;
 	JLabel lLogin,lPassword;
 	JTextField tLogin,tPassword;
+	static String Mlogin;
+	
+	Connection conn = null;
+	ResultSet RS = null;
+	PreparedStatement PST = null;
+	
+
 	
 	public WindowSignIn() {
 		setSize(400, 300);
 		setTitle("System Biblioteczny - Logowanie");
 		setLayout(null);
+		
+		
+		conn=DatabaseConnection.ConnectDbs();
 		
 		bSignIn = new JButton("Zaloguj");
 		bSignIn.setBounds(150, 200, 100, 20);
@@ -32,13 +40,15 @@ public class WindowSignIn extends JFrame implements ActionListener{
 		lPassword.setBounds(10, 41, 100, 20);
 		add(lPassword);
 		
+		tPassword = new JPasswordField();
+		tPassword.setBounds(111, 41, 100, 20);
+		add(tPassword);
+		
+		
 		tLogin = new JTextField();
 		tLogin.setBounds(111, 20, 100, 20);
 		add(tLogin);
 		
-		tPassword = new JTextField();
-		tPassword.setBounds(111, 41, 100, 20);
-		add(tPassword);
 	}
 	
 	
@@ -51,7 +61,32 @@ public class WindowSignIn extends JFrame implements ActionListener{
 		Object source = e.getSource();
 		
 		if(source==bSignIn){
-			dispose();
+	
+			
+
+			try{
+				String sql="select * from users where login=? and haslo=?";
+				PST=conn.prepareStatement(sql);
+				PST.setString(1, tLogin.getText());
+				PST.setString(2, tPassword.getText());
+				RS=PST.executeQuery();
+				if(RS.next()){
+					JOptionPane.showMessageDialog(null,"Zalogowano pomyœlnie.");
+					Mlogin = tLogin.getText();
+					dispose();
+					WindowMain WindowMain= new WindowMain();
+					WindowMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					WindowMain.setVisible(true);
+					
+				}else{
+					JOptionPane.showMessageDialog(null,"Coœ posz³o nie tak, spróbuj ponownie.");
+				}
+				
+				
+			}catch(Exception a){
+				JOptionPane.showMessageDialog(null,a);
+			}
+		
 		}
 	}
 
