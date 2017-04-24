@@ -135,7 +135,7 @@ public class WindowSignUp extends JFrame implements ActionListener {
 			PST.setString(8,pesel);
 			PST.setString(9,miasto);
 			PST.executeUpdate(); 
-			JOptionPane.showMessageDialog(this,"Zarejestrowano pomyúlnie.");
+			JOptionPane.showMessageDialog(this,"Zarejestrowano pomy≈õlnie.");
 			
 			
 			
