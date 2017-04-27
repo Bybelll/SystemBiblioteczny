@@ -71,15 +71,15 @@ public class WindowSignIn extends JFrame implements ActionListener{
 				PST.setString(2, tPassword.getText());
 				RS=PST.executeQuery();
 				if(RS.next()){
-					JOptionPane.showMessageDialog(null,"Zalogowano pomyœlnie.");
+					JOptionPane.showMessageDialog(null,"Zalogowano pomyslnie.");
 					Mlogin = tLogin.getText();
 					dispose();
-					WindowMain WindowMain= new WindowMain();
-					WindowMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-					WindowMain.setVisible(true);
+					WindowSemiFin windowSemiFin = new WindowSemiFin();
+					windowSemiFin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					windowSemiFin.setVisible(true);
 					
 				}else{
-					JOptionPane.showMessageDialog(null,"Coœ posz³o nie tak, spróbuj ponownie.");
+					JOptionPane.showMessageDialog(null,"Coï¿½ poszï¿½o nie tak, sprï¿½buj ponownie.");
 				}
 				
 				

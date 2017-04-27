@@ -1,12 +1,19 @@
 package SystemB;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -14,19 +21,23 @@ import javax.swing.SwingConstants;
 
 public class WindowSemiFin extends JFrame implements ActionListener {
 
-	JFrame frame;
+//	JFrame frame;
 	JTextField txtSzukaj;
 	JButton btnSzukaj;
 	JButton btnWyloguj;
-	JTable table;
+//	JTable table;
 	private JTable table_1;
 	JButton btnMojeKonto;
+
+	
+	String[] columsName = {"Tytu≈Ç","Autor","Rok produkcji"};
+	Object[][] data = {{"WEVG","QWRG","QERG"}};
 
 
 
 	public WindowSemiFin() {
 		setSize(800, 400);
-		setTitle("System Biblioteczny - Program g≥Ûwny");
+		setTitle("System");
 		getContentPane().setLayout(null);
 		
 		txtSzukaj = new JTextField();
@@ -57,8 +68,8 @@ public class WindowSemiFin extends JFrame implements ActionListener {
 		getContentPane().add(btnWyloguj);
 		btnWyloguj.addActionListener(this);
 		
-		table_1 = new JTable();
-		table_1.setBounds(108, 107, 523, 221);
+		table_1 = new JTable(data,columsName);
+		table_1.setBounds(108, 120, 500, 221);
 		getContentPane().add(table_1);
 		
 		JButton btnWypoycz = new JButton("Wypo\u017Cycz");
@@ -101,11 +112,7 @@ public class WindowSemiFin extends JFrame implements ActionListener {
 			WindowAccount.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			WindowAccount.setVisible(true);	
 		}
-		else if(source==btnWyloguj){
-			Window Window= new Window();
-			Window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			Window.setVisible(true);	
-		}
+
 		
 	}
 }

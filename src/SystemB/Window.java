@@ -42,13 +42,15 @@ public class Window extends JFrame implements ActionListener {
 
 		if (source == bSingIn) {
 			WindowSignIn windowSignIn= new WindowSignIn();
-			windowSignIn.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//			windowSignIn.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			windowSignIn.setVisible(true);
+			this.setVisible(false);
 			
 		} else if (source == bSingUp) {
 			WindowSignUp windowSignUp= new WindowSignUp();
 			windowSignUp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			windowSignUp.setVisible(true);
+			this.setVisible(false);
 		}
 
 	}

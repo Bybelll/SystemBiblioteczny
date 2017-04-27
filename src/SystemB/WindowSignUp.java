@@ -148,6 +148,8 @@ public class WindowSignUp extends JFrame implements ActionListener {
 		if(source==bSignUp){
 			
 			dispose();
+			Window window = new Window();
+			window.setVisible(true);
 		}
 
 	}

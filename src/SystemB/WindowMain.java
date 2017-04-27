@@ -27,7 +27,7 @@ public class WindowMain extends JFrame implements ActionListener {
 
 	public WindowMain() {
 		setSize(800, 400);
-		setTitle("System Biblioteczny - Program g³ówny");
+		setTitle("System Biblioteczny - Program glowny");
 		getContentPane().setLayout(null);
 		
 		txtSzukaj = new JTextField();
