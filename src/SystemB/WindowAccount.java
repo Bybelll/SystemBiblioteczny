@@ -157,7 +157,7 @@ public class WindowAccount extends JFrame implements ActionListener {
 
 		else if (source == btnWr) {
 			dispose();
-			WindowMain WindowMain = new WindowMain();
+			WindowSemiFin WindowMain = new WindowSemiFin();
 			WindowMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			WindowMain.setVisible(true);
 		}
@@ -185,7 +185,7 @@ public class WindowAccount extends JFrame implements ActionListener {
 				PS.setString(6,spesel);
 				PS.setString(7,smiasto);
 				PS.executeUpdate(); 
-				JOptionPane.showMessageDialog(this,"Zaktualizowano pomyœlnie.");
+				JOptionPane.showMessageDialog(this,"Zaktualizowano pomyï¿½lnie.");
 				
 				
 				

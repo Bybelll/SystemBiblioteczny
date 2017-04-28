@@ -71,12 +71,12 @@ public class WindowSignIn extends JFrame implements ActionListener{
 				PST.setString(2, tPassword.getText());
 				RS=PST.executeQuery();
 				if(RS.next()){
-					JOptionPane.showMessageDialog(null,"Zalogowano pomyslnie.");
+					
 					Mlogin = tLogin.getText();
 					dispose();
-					WindowSemiFin windowSemiFin = new WindowSemiFin();
-					windowSemiFin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-					windowSemiFin.setVisible(true);
+					WindowSemiFin WindowMain= new WindowSemiFin();
+					WindowMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					WindowMain.setVisible(true);
 					
 				}else{
 					JOptionPane.showMessageDialog(null,"Co� posz�o nie tak, spr�buj ponownie.");
@@ -86,7 +86,9 @@ public class WindowSignIn extends JFrame implements ActionListener{
 			}catch(Exception a){
 				JOptionPane.showMessageDialog(null,a);
 			}
-		
+//			JOptionPane.showMessageDialog(null,"Zalogowano pomyślnie.");
+			
+			
 		}
 	}
 

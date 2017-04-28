@@ -8,7 +8,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import java.sql.*;
 
 public class WindowSignUp extends JFrame implements ActionListener {
@@ -135,7 +134,7 @@ public class WindowSignUp extends JFrame implements ActionListener {
 			PST.setString(8,pesel);
 			PST.setString(9,miasto);
 			PST.executeUpdate(); 
-			JOptionPane.showMessageDialog(this,"Zarejestrowano pomyślnie.");
+			JOptionPane.showMessageDialog(this,"Zarejestrowano pomy�lnie.");
 			
 			
 			
@@ -148,8 +147,6 @@ public class WindowSignUp extends JFrame implements ActionListener {
 		if(source==bSignUp){
 			
 			dispose();
-			Window window = new Window();
-			window.setVisible(true);
 		}
 
 	}
