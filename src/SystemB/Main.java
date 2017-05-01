@@ -11,6 +11,7 @@ public class Main {
 		MainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		MainWindow.setVisible(true);
 
+		
 	}
 
 }

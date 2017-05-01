@@ -10,10 +10,7 @@ import javax.swing.JLabel;
 public class Window extends JFrame implements ActionListener {
 
 	JButton bSingUp, bSingIn;
-	JLabel lWelcome;
-
-
-	
+	JLabel lWelcome;	
 	
 	public Window() {
 		setSize(840, 600);

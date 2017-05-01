@@ -3,18 +3,18 @@ package SystemB;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 import SystemB.Window;
 import java.sql.*;
+import java.util.Vector;
 
 public class WindowAccount extends JFrame implements ActionListener {
 
 	JFrame frame;
-	private JTable table;
+	private JTable table, table2;
 	JButton btnWyloguj;
 	JButton btnWr, btnAcc;
 	JTextField imie, nazwisko, ulica, numm, kod, miasto, pesel;
@@ -22,97 +22,122 @@ public class WindowAccount extends JFrame implements ActionListener {
 	ResultSet rs;
 	Statement PST;
 	PreparedStatement PS = null;
-
+	JScrollPane tablica, aktualne;
+	
 	public WindowAccount() {
 		getContentPane().setLayout(null);
 
 		conn = DatabaseConnection.ConnectDbs();
 
 		imie = new JTextField();
-		imie.setBounds(15, 56, 115, 26);
-		add(imie);
+		imie.setBounds(15, 60, 115, 25);
+		getContentPane().add(imie);
 
 		JLabel lblImi = new JLabel("Imi\u0119");
-		lblImi.setBounds(15, 31, 69, 20);
+		lblImi.setBounds(15, 40, 69, 20);
 		getContentPane().add(lblImi);
 
 		nazwisko = new JTextField();
-		nazwisko.setBounds(15, 110, 146, 26);
-		add(nazwisko);
+		nazwisko.setBounds(15, 110, 146, 25);
+		getContentPane().add(nazwisko);
 		
 
 		JLabel lblNazwisko = new JLabel("Nazwisko");
-		lblNazwisko.setBounds(15, 85, 69, 20);
+		lblNazwisko.setBounds(15, 90, 69, 20);
 		getContentPane().add(lblNazwisko);
 
 		ulica = new JTextField();
-		ulica.setBounds(15, 163, 146, 26);
-		add(ulica);
+		ulica.setBounds(15, 160, 146, 25);
+		getContentPane().add(ulica);
 
 		JLabel lblUlicaINr = new JLabel("Ulica i nr domu");
-		lblUlicaINr.setBounds(15, 138, 146, 20);
+		lblUlicaINr.setBounds(15, 140, 146, 20);
 		getContentPane().add(lblUlicaINr);
 
 		numm = new JTextField();
-		numm.setBounds(15, 216, 77, 26);
-		add(numm);
+		numm.setBounds(15, 210, 77, 25);
+		getContentPane().add(numm);
 
 		JLabel lblNumerMieszkania = new JLabel("Numer mieszkania");
-		lblNumerMieszkania.setBounds(15, 194, 146, 20);
+		lblNumerMieszkania.setBounds(15, 190, 146, 20);
 		getContentPane().add(lblNumerMieszkania);
 
 		JLabel lblKodPocztowy = new JLabel("Kod pocztowy");
-		lblKodPocztowy.setBounds(15, 249, 103, 20);
+		lblKodPocztowy.setBounds(15, 240, 103, 20);
 		getContentPane().add(lblKodPocztowy);
 
 		kod = new JTextField();
-		kod.setBounds(15, 274, 103, 26);
-		add(kod);
+		kod.setBounds(15, 260, 103, 25);
+		getContentPane().add(kod);
 
 		JLabel lblMiasto = new JLabel("Miasto");
-		lblMiasto.setBounds(148, 249, 69, 20);
+		lblMiasto.setBounds(148, 240, 69, 20);
 		getContentPane().add(lblMiasto);
 
 		miasto = new JTextField();
-		miasto.setBounds(136, 274, 131, 26);
-		add(miasto);
+		miasto.setBounds(136, 260, 131, 25);
+		getContentPane().add(miasto);
 
 		JLabel lblNrPesel = new JLabel("Nr pesel");
-		lblNrPesel.setBounds(15, 316, 69, 20);
+		lblNrPesel.setBounds(15, 290, 69, 20);
 		getContentPane().add(lblNrPesel);
 
 		pesel = new JTextField();
-		pesel.setBounds(15, 340, 222, 26);
-		add(pesel);
+		pesel.setBounds(15, 310, 222, 25);
+		getContentPane().add(pesel);
 
-		JLabel lblHistoriaWypoycze = new JLabel("Historia Wypo\u017Cycze\u0144");
-		lblHistoriaWypoycze.setBounds(510, 28, 183, 26);
+		JLabel lblAktualneWyp = new JLabel("Aktualne wypo¿yczenia");
+		lblAktualneWyp.setHorizontalAlignment(SwingConstants.CENTER);
+		lblAktualneWyp.setBounds(470, 10, 120, 26);
+		getContentPane().add(lblAktualneWyp);
+
+		aktualne = new JScrollPane();
+		aktualne.setSize(450, 115);
+		aktualne.setLocation(300, 35);
+		getContentPane().add(aktualne);
+		
+		JLabel lblHistoriaWypoycze = new JLabel("Historia wypo¿yczeñ");
+		lblHistoriaWypoycze.setHorizontalAlignment(SwingConstants.CENTER);
+		lblHistoriaWypoycze.setBounds(470, 155, 120, 26);
 		getContentPane().add(lblHistoriaWypoycze);
+		
+		tablica = new JScrollPane();
+		tablica.setSize(450, 200);
+		tablica.setLocation(300, 180);
+		getContentPane().add(tablica);
 
-		table = new JTable();
-		table.setBounds(407, 56, 358, 226);
-		getContentPane().add(table);
+		
+//		table = new JTable();
+//		table.setBounds(407, 56, 358, 226);
+//		getContentPane().add(table);
+//		
 		setSize(800, 436);
 		setTitle("Twoje Konto");
 		getContentPane().setLayout(null);
 
 		btnWyloguj = new JButton("Wyloguj");
-		btnWyloguj.setBounds(648, 0, 115, 29);
+		btnWyloguj.setBounds(660, 0, 115, 29);
 		getContentPane().add(btnWyloguj);
 		btnWyloguj.addActionListener(this);
 
-		btnWr = new JButton("Wr\u00F3\u0107");
-		btnWr.setBounds(3, 0, 115, 29);
+		btnWr = new JButton("Wróæ");
+		btnWr.setBounds(15, 10, 115, 29);
 		getContentPane().add(btnWr);
 		btnWr.addActionListener(this);
 		
+		
 		btnAcc = new JButton("Zatwierdz zmiany");
-		btnAcc.setBounds(350, 316, 180, 35);
+		btnAcc.setBounds(15, 350, 180, 35);
 		getContentPane().add(btnAcc);
 		btnAcc.addActionListener(this);
 
 		wysw();
+		loan();
+		loan_current();
 
+		try { rs.close(); } catch (Exception e) { /* ignored */ }
+	    try { PST.close(); } catch (Exception e) { /* ignored */ }
+	    try { conn.close(); } catch (Exception e) { /* ignored */ }
 	}
 
 	public void wysw() {
@@ -143,6 +168,60 @@ public class WindowAccount extends JFrame implements ActionListener {
 		}
 	}
 
+	public void loan()
+	{
+		try {
+
+			String sql = "select tytul, status, data from historia where user='" + WindowSignIn.Mlogin + "' order by data desc";
+			PST = conn.createStatement();
+			rs = PST.executeQuery(sql);
+		}
+
+		catch (Exception a) {
+			JOptionPane.showMessageDialog(null, a);
+		}
+
+		try {
+			table = new JTable(buildTableModel(rs));
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		tablica.setViewportView(table);
+		tablica.validate();
+		tablica.revalidate();
+		tablica.repaint();
+		
+	}
+
+	public void loan_current()
+	{
+		try {
+
+			String sql = "select tytul, data from loan_list_open where status_id=3 and user='" + WindowSignIn.Mlogin + "' order by data desc";
+			PST = conn.createStatement();
+			rs = PST.executeQuery(sql);
+		}
+
+		catch (Exception a) {
+			JOptionPane.showMessageDialog(null, a);
+		}
+
+		try {
+			table2 = new JTable(buildTableModel(rs));
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		aktualne.setViewportView(table2);
+		aktualne.validate();
+		aktualne.revalidate();
+		aktualne.repaint();
+		
+	}
+
+	
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -198,4 +277,42 @@ public class WindowAccount extends JFrame implements ActionListener {
 
 	}
 
+	public static DefaultTableModel buildTableModel(ResultSet rs) throws SQLException {
+
+		ResultSetMetaData metaData = rs.getMetaData();
+
+		// names of columns
+		Vector<String> columnNames = new Vector<String>();
+//		columnNames.add("ID");
+//		columnNames.add("Imie Autora");
+//		columnNames.add("Nazwisko autora");
+//		columnNames.add("Tytu³");
+//		columnNames.add("Rok publikacji");
+//		columnNames.add("ISBN");
+//		columnNames.add("Wydawnictwo");
+//		columnNames.add("Kategoria");
+//		columnNames.add("Status");
+//		
+
+		int columnCount = metaData.getColumnCount();
+
+		for (int column = 1; column <= columnCount; column++) {
+		columnNames.add(metaData.getColumnName(column));
+		}
+
+		// data of the table
+		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+		while (rs.next()) {
+			Vector<Object> vector = new Vector<Object>();
+			for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+				vector.add(rs.getObject(columnIndex));
+			}
+			data.add(vector);
+		}
+
+		return new DefaultTableModel(data, columnNames);
+	}
 }
+
+	
+

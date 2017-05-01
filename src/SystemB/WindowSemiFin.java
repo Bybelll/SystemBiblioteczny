@@ -12,6 +12,10 @@ import java.util.Vector;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.ButtonGroup;
@@ -22,13 +26,9 @@ import javax.swing.table.DefaultTableModel;
 public class WindowSemiFin extends JFrame implements ActionListener {
 
 	JTextField txtSzukaj;
-
-	JButton btnSzukaj;
-	JButton btnWyloguj;
-	JButton btnMojeKonto;
+	JButton btnSzukaj, btnWyloguj, btnMojeKonto, btnWypozycz;
 
 	JTable table;
-
 	JScrollPane tablica;
 
 	JRadioButton rdbtnTytul;
@@ -41,11 +41,12 @@ public class WindowSemiFin extends JFrame implements ActionListener {
 	ResultSet rs = null;
 	PreparedStatement PST = null;
 	String querry;
+	Integer selection;
 
 	public WindowSemiFin() {
 
 		setSize(800, 400);
-		setTitle("System Biblioteczny - Program główny");
+		setTitle("System Biblioteczny - Program g��wny");
 		getContentPane().setLayout(null);
 
 		conn = DatabaseConnection.ConnectDbs();
@@ -56,7 +57,7 @@ public class WindowSemiFin extends JFrame implements ActionListener {
 		getContentPane().add(txtSzukaj);
 
 		ButtonGroup searchOption = new ButtonGroup();
-		rdbtnTytul = new JRadioButton("Tytuł", true);
+		rdbtnTytul = new JRadioButton("Tytu�", true);
 		rdbtnTytul.setBounds(98, 66, 69, 29);
 		getContentPane().add(rdbtnTytul);
 		searchOption.add(rdbtnTytul);
@@ -86,51 +87,27 @@ public class WindowSemiFin extends JFrame implements ActionListener {
 		tablica.setLocation(50, 100);
 		getContentPane().add(tablica);
 
-		JButton btnWypoycz = new JButton("Wypo\u017Cycz");
-		btnWypoycz.setBounds(648, 299, 115, 29);
-		getContentPane().add(btnWypoycz);
-
-		JButton btnSprawd = new JButton("Sprawdz status");
-		btnSprawd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-			}
-		});
-		btnSprawd.setBounds(630, 263, 148, 33);
-		getContentPane().add(btnSprawd);
-
+		btnWypozycz = new JButton("Wypo�ycz");
+		btnWypozycz.setBounds(648, 299, 115, 29);
+		getContentPane().add(btnWypozycz);
+		btnWypozycz.addActionListener(this);
+		
 		btnMojeKonto = new JButton("Moje Konto");
 		btnMojeKonto.setBounds(547, 0, 115, 29);
 		getContentPane().add(btnMojeKonto);
 		btnMojeKonto.addActionListener(this);
+		
+		catalogue();
+		
 	}
 
-	public void searching() {
-
+	public void catalogue()
+	{
 		try {
 
-			String sql = "SELECT a.fname,a.sname, b.title, b.pub_year, b.isbn, p.name, c.name FROM book as b "
-					+ "LEFT JOIN publisher as p ON p.id_pub=b.id_pub " + "LEFT JOIN category as c ON c.id_cat=b.id_cat "
-					+ "LEFT JOIN book_authors as ba ON ba.id_book=b.id_book "
-					+ "LEFT JOIN author as a ON a.id_aut=ba.id_aut ";
+			String sql = "SELECT * from wypozyczalnia2";
 
-			if (rdbtnTytul.isSelected()) {
-				sql += "where b.title=?";
-			} else if (rdbtnAutor.isSelected()) {
-				sql += "where a.sname=? OR a.fname=?";
-
-			} else if (rdbtnRokPublikacji.isSelected()) {
-				sql += "where b.pub_year=?";
-			}
-
-			querry = txtSzukaj.getText();
-			PST = conn.prepareStatement(sql);
-			PST.setString(1, querry);
-
-			if (rdbtnAutor.isSelected()) {
-				PST.setString(2, querry);
-			}
-
+			PST = conn.prepareStatement(sql);			
 			rs = PST.executeQuery();
 		}
 
@@ -140,6 +117,46 @@ public class WindowSemiFin extends JFrame implements ActionListener {
 
 		try {
 			table = new JTable(buildTableModel(rs));
+			
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		tablica.getViewport().add(table);
+		tablica.validate();
+		tablica.revalidate();
+		tablica.repaint();
+		
+	}
+	
+	public void searching() {
+
+		try {
+			
+			String sql = "SELECT * from wypozyczalnia2 ";
+
+			if (rdbtnTytul.isSelected()) {
+				sql += "where tytul like ?";
+			} else if (rdbtnAutor.isSelected()) {
+				sql += "where autorzy like ?";
+
+			} else if (rdbtnRokPublikacji.isSelected()) {
+				sql += "where rok like ?";
+			}
+			querry = "%"+ txtSzukaj.getText() + "%";
+			PST = conn.prepareStatement(sql);
+			PST.setString(1, querry);
+			rs = PST.executeQuery();
+		}
+
+		catch (Exception a) {
+			JOptionPane.showMessageDialog(null, a);
+		}
+
+		try {
+			table = new JTable(buildTableModel(rs));		
+			
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -151,6 +168,8 @@ public class WindowSemiFin extends JFrame implements ActionListener {
 		tablica.repaint();
 	}
 
+	
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -158,6 +177,7 @@ public class WindowSemiFin extends JFrame implements ActionListener {
 
 		if (source == btnWyloguj) {
 			dispose();
+			
 			Window Window = new Window();
 
 			Window.setVisible(true);
@@ -167,30 +187,33 @@ public class WindowSemiFin extends JFrame implements ActionListener {
 			dispose();
 		} else if (source == btnSzukaj) {
 			searching();
+		} else if (source == btnWypozycz){
+			wypozycz();
 		}
-
 	}
 
 	public static DefaultTableModel buildTableModel(ResultSet rs) throws SQLException {
 
 		ResultSetMetaData metaData = rs.getMetaData();
 
-		// names of columns
+//		// names of columns
 		Vector<String> columnNames = new Vector<String>();
-
-		columnNames.add("Imie Autora");
-		columnNames.add("Nazwisko autora");
-		columnNames.add("Tytuł");
-		columnNames.add("Rok publikacji");
-		columnNames.add("isbn");
-		columnNames.add("Wydawnictwo");
-		columnNames.add("Kategoria");
+//		columnNames.add("ID");
+//		columnNames.add("Imie Autora");
+//		columnNames.add("Nazwisko autora");
+//		columnNames.add("Tytu�");
+//		columnNames.add("Rok publikacji");
+//		columnNames.add("ISBN");
+//		columnNames.add("Wydawnictwo");
+//		columnNames.add("Kategoria");
+//		columnNames.add("Status");
+		
 
 		int columnCount = metaData.getColumnCount();
 
-		// for (int column = 1; column <= columnCount; column++) {
-		// columnNames.add(metaData.getColumnName(column));
-		// }
+		 for (int column = 1; column <= columnCount; column++) {
+		 columnNames.add(metaData.getColumnName(column));
+		 }
 
 		// data of the table
 		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
@@ -201,7 +224,41 @@ public class WindowSemiFin extends JFrame implements ActionListener {
 			}
 			data.add(vector);
 		}
-
-		return new DefaultTableModel(data, columnNames);
+		
+		return new SearchTable(data, columnNames);
 	}
+	
+	private void wypozycz()
+	{
+		Integer row= new Integer(table.getSelectedRow());
+		selection = (Integer) (table.getValueAt(row, 0));
+		System.out.println(selection);
+		String book_title = new String();
+		book_title = (String) table.getValueAt(row, 1);
+		if(!table.getValueAt(row, 7).equals("dostepna"))
+		{
+		   	JOptionPane.showMessageDialog(null, "Ta pozycja jest niedostepna.");
+		}	
+		else{
+		int wypozyczenie = JOptionPane.showConfirmDialog(null,"Czy chcesz wypozyczyc ksiazke "+ book_title +"?", "Potwierdzenie", JOptionPane.YES_NO_OPTION);
+		   if (wypozyczenie == JOptionPane.YES_OPTION) {
+				
+			   try{
+				String sql = "CALL `sql11171543`.`borrow`("+selection+", "+WindowSignIn.MUserID+", 3)";
+				PST = conn.prepareStatement(sql);			
+				rs = PST.executeQuery();
+			   }
+			   catch (Exception a) {
+					JOptionPane.showMessageDialog(null, a);
+				}
+			   
+			   JOptionPane.showMessageDialog(null, "Ksi��ka wypo�yczona!");
+		        }
+		        else {
+		        	JOptionPane.showMessageDialog(null, "Wystapi� b��d. Sprobuj ponownie pozniej lub skontaktuj si� z bibliotekarzem.");
+		        }
+		}
+	}
+
 }
+

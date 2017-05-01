@@ -12,6 +12,7 @@ public class WindowSignIn extends JFrame implements ActionListener{
 	JLabel lLogin,lPassword;
 	JTextField tLogin,tPassword;
 	static String Mlogin;
+	static String MUserID;
 	
 	Connection conn = null;
 	ResultSet RS = null;
@@ -65,7 +66,7 @@ public class WindowSignIn extends JFrame implements ActionListener{
 			
 
 			try{
-				String sql="select * from users where login=? and haslo=?";
+				String sql="select user_id from users where login=? and haslo=?";
 				PST=conn.prepareStatement(sql);
 				PST.setString(1, tLogin.getText());
 				PST.setString(2, tPassword.getText());
@@ -73,13 +74,14 @@ public class WindowSignIn extends JFrame implements ActionListener{
 				if(RS.next()){
 					
 					Mlogin = tLogin.getText();
+					MUserID = RS.getString("user_id");
 					dispose();
 					WindowSemiFin WindowMain= new WindowSemiFin();
 					WindowMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					WindowMain.setVisible(true);
 					
 				}else{
-					JOptionPane.showMessageDialog(null,"Coï¿½ poszï¿½o nie tak, sprï¿½buj ponownie.");
+					JOptionPane.showMessageDialog(null,"Coœ posz³o nie tak, spróbuj ponownie.");
 				}
 				
 				

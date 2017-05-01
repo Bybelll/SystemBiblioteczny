@@ -13,7 +13,7 @@ public class DatabaseConnection {
 			
 			try{
 				Class.forName("com.mysql.jdbc.Driver");
-				Connection conn= DriverManager.getConnection("jdbc:mysql://localhost:3306/books","root","");
+				Connection conn= DriverManager.getConnection("jdbc:mysql://sql11.freesqldatabase.com/sql11171543?characterEncoding=UTF-8","sql11171543","SMbd9wcgnH");
 				return conn;
 			}catch(Exception e){
 				JOptionPane.showMessageDialog(null,e);
