@@ -91,23 +91,22 @@ public class WindowSemiFin extends JFrame implements ActionListener {
 		btnWypozycz.setBounds(648, 299, 115, 29);
 		getContentPane().add(btnWypozycz);
 		btnWypozycz.addActionListener(this);
-		
+
 		btnMojeKonto = new JButton("Moje Konto");
 		btnMojeKonto.setBounds(547, 0, 115, 29);
 		getContentPane().add(btnMojeKonto);
 		btnMojeKonto.addActionListener(this);
-		
+
 		catalogue();
-		
+
 	}
 
-	public void catalogue()
-	{
+	public void catalogue() {
 		try {
 
 			String sql = "SELECT * from wypozyczalnia2";
 
-			PST = conn.prepareStatement(sql);			
+			PST = conn.prepareStatement(sql);
 			rs = PST.executeQuery();
 		}
 
@@ -117,7 +116,7 @@ public class WindowSemiFin extends JFrame implements ActionListener {
 
 		try {
 			table = new JTable(buildTableModel(rs));
-			
+
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -127,13 +126,13 @@ public class WindowSemiFin extends JFrame implements ActionListener {
 		tablica.validate();
 		tablica.revalidate();
 		tablica.repaint();
-		
+
 	}
-	
+
 	public void searching() {
 
 		try {
-			
+
 			String sql = "SELECT * from wypozyczalnia2 ";
 
 			if (rdbtnTytul.isSelected()) {
@@ -144,7 +143,7 @@ public class WindowSemiFin extends JFrame implements ActionListener {
 			} else if (rdbtnRokPublikacji.isSelected()) {
 				sql += "where rok like ?";
 			}
-			querry = "%"+ txtSzukaj.getText() + "%";
+			querry = "%" + txtSzukaj.getText() + "%";
 			PST = conn.prepareStatement(sql);
 			PST.setString(1, querry);
 			rs = PST.executeQuery();
@@ -155,8 +154,8 @@ public class WindowSemiFin extends JFrame implements ActionListener {
 		}
 
 		try {
-			table = new JTable(buildTableModel(rs));		
-			
+			table = new JTable(buildTableModel(rs));
+
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -168,8 +167,6 @@ public class WindowSemiFin extends JFrame implements ActionListener {
 		tablica.repaint();
 	}
 
-	
-	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -177,7 +174,7 @@ public class WindowSemiFin extends JFrame implements ActionListener {
 
 		if (source == btnWyloguj) {
 			dispose();
-			
+
 			Window Window = new Window();
 
 			Window.setVisible(true);
@@ -187,7 +184,7 @@ public class WindowSemiFin extends JFrame implements ActionListener {
 			dispose();
 		} else if (source == btnSzukaj) {
 			searching();
-		} else if (source == btnWypozycz){
+		} else if (source == btnWypozycz) {
 			wypozycz();
 		}
 	}
@@ -196,24 +193,23 @@ public class WindowSemiFin extends JFrame implements ActionListener {
 
 		ResultSetMetaData metaData = rs.getMetaData();
 
-//		// names of columns
+		// // names of columns
 		Vector<String> columnNames = new Vector<String>();
-//		columnNames.add("ID");
-//		columnNames.add("Imie Autora");
-//		columnNames.add("Nazwisko autora");
-//		columnNames.add("Tytu�");
-//		columnNames.add("Rok publikacji");
-//		columnNames.add("ISBN");
-//		columnNames.add("Wydawnictwo");
-//		columnNames.add("Kategoria");
-//		columnNames.add("Status");
-		
+		// columnNames.add("ID");
+		// columnNames.add("Imie Autora");
+		// columnNames.add("Nazwisko autora");
+		// columnNames.add("Tytu�");
+		// columnNames.add("Rok publikacji");
+		// columnNames.add("ISBN");
+		// columnNames.add("Wydawnictwo");
+		// columnNames.add("Kategoria");
+		// columnNames.add("Status");
 
 		int columnCount = metaData.getColumnCount();
 
-		 for (int column = 1; column <= columnCount; column++) {
-		 columnNames.add(metaData.getColumnName(column));
-		 }
+		for (int column = 1; column <= columnCount; column++) {
+			columnNames.add(metaData.getColumnName(column));
+		}
 
 		// data of the table
 		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
@@ -224,41 +220,38 @@ public class WindowSemiFin extends JFrame implements ActionListener {
 			}
 			data.add(vector);
 		}
-		
+
 		return new SearchTable(data, columnNames);
 	}
-	
-	private void wypozycz()
-	{
-		Integer row= new Integer(table.getSelectedRow());
+
+	private void wypozycz() {
+		
+		Integer row = new Integer(table.getSelectedRow());
 		selection = (Integer) (table.getValueAt(row, 0));
 		System.out.println(selection);
 		String book_title = new String();
 		book_title = (String) table.getValueAt(row, 1);
-		if(!table.getValueAt(row, 7).equals("dostepna"))
-		{
-		   	JOptionPane.showMessageDialog(null, "Ta pozycja jest niedostepna.");
-		}	
-		else{
-		int wypozyczenie = JOptionPane.showConfirmDialog(null,"Czy chcesz wypozyczyc ksiazke "+ book_title +"?", "Potwierdzenie", JOptionPane.YES_NO_OPTION);
-		   if (wypozyczenie == JOptionPane.YES_OPTION) {
-				
-			   try{
-				String sql = "CALL `sql11171543`.`borrow`("+selection+", "+WindowSignIn.MUserID+", 3)";
-				PST = conn.prepareStatement(sql);			
-				rs = PST.executeQuery();
-			   }
-			   catch (Exception a) {
+		if (!table.getValueAt(row, 7).equals("dostepna")) {
+			JOptionPane.showMessageDialog(null, "Ta pozycja jest niedostepna.");
+		} else {
+			int wypozyczenie = JOptionPane.showConfirmDialog(null, "Czy chcesz wypozyczyc ksiazke " + book_title + "?",
+					"Potwierdzenie", JOptionPane.YES_NO_OPTION);
+			if (wypozyczenie == JOptionPane.YES_OPTION) {
+
+				try {
+					String sql = "CALL `sql11171543`.`borrow`(" + selection + ", " + WindowSignIn.MUserID + ", 3)";
+					PST = conn.prepareStatement(sql);
+					rs = PST.executeQuery();
+				} catch (Exception a) {
 					JOptionPane.showMessageDialog(null, a);
 				}
-			   
-			   JOptionPane.showMessageDialog(null, "Ksi��ka wypo�yczona!");
-		        }
-		        else {
-		        	JOptionPane.showMessageDialog(null, "Wystapi� b��d. Sprobuj ponownie pozniej lub skontaktuj si� z bibliotekarzem.");
-		        }
+
+				JOptionPane.showMessageDialog(null, "Ksi��ka wypo�yczona!");
+			} else {
+				JOptionPane.showMessageDialog(null,
+						"Wystapi� b��d. Sprobuj ponownie pozniej lub skontaktuj si� z bibliotekarzem.");
+			}
 		}
 	}
 
 }
-

@@ -1,6 +1,5 @@
 package SystemB;
 
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -23,7 +22,7 @@ public class WindowAccount extends JFrame implements ActionListener {
 	Statement PST;
 	PreparedStatement PS = null;
 	JScrollPane tablica, aktualne;
-	
+
 	public WindowAccount() {
 		getContentPane().setLayout(null);
 
@@ -40,7 +39,6 @@ public class WindowAccount extends JFrame implements ActionListener {
 		nazwisko = new JTextField();
 		nazwisko.setBounds(15, 110, 146, 25);
 		getContentPane().add(nazwisko);
-		
 
 		JLabel lblNazwisko = new JLabel("Nazwisko");
 		lblNazwisko.setBounds(15, 90, 69, 20);
@@ -86,7 +84,7 @@ public class WindowAccount extends JFrame implements ActionListener {
 		pesel.setBounds(15, 310, 222, 25);
 		getContentPane().add(pesel);
 
-		JLabel lblAktualneWyp = new JLabel("Aktualne wypo¿yczenia");
+		JLabel lblAktualneWyp = new JLabel("Aktualne wypoï¿½yczenia");
 		lblAktualneWyp.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAktualneWyp.setBounds(470, 10, 120, 26);
 		getContentPane().add(lblAktualneWyp);
@@ -95,22 +93,21 @@ public class WindowAccount extends JFrame implements ActionListener {
 		aktualne.setSize(450, 115);
 		aktualne.setLocation(300, 35);
 		getContentPane().add(aktualne);
-		
-		JLabel lblHistoriaWypoycze = new JLabel("Historia wypo¿yczeñ");
+
+		JLabel lblHistoriaWypoycze = new JLabel("Historia wypoï¿½yczeï¿½");
 		lblHistoriaWypoycze.setHorizontalAlignment(SwingConstants.CENTER);
 		lblHistoriaWypoycze.setBounds(470, 155, 120, 26);
 		getContentPane().add(lblHistoriaWypoycze);
-		
+
 		tablica = new JScrollPane();
 		tablica.setSize(450, 200);
 		tablica.setLocation(300, 180);
 		getContentPane().add(tablica);
 
-		
-//		table = new JTable();
-//		table.setBounds(407, 56, 358, 226);
-//		getContentPane().add(table);
-//		
+		// table = new JTable();
+		// table.setBounds(407, 56, 358, 226);
+		// getContentPane().add(table);
+		//
 		setSize(800, 436);
 		setTitle("Twoje Konto");
 		getContentPane().setLayout(null);
@@ -120,12 +117,11 @@ public class WindowAccount extends JFrame implements ActionListener {
 		getContentPane().add(btnWyloguj);
 		btnWyloguj.addActionListener(this);
 
-		btnWr = new JButton("Wróæ");
+		btnWr = new JButton("Wrï¿½ï¿½");
 		btnWr.setBounds(15, 10, 115, 29);
 		getContentPane().add(btnWr);
 		btnWr.addActionListener(this);
-		
-		
+
 		btnAcc = new JButton("Zatwierdz zmiany");
 		btnAcc.setBounds(15, 350, 180, 35);
 		getContentPane().add(btnAcc);
@@ -135,9 +131,18 @@ public class WindowAccount extends JFrame implements ActionListener {
 		loan();
 		loan_current();
 
-		try { rs.close(); } catch (Exception e) { /* ignored */ }
-	    try { PST.close(); } catch (Exception e) { /* ignored */ }
-	    try { conn.close(); } catch (Exception e) { /* ignored */ }
+		try {
+			rs.close();
+		} catch (Exception e) {
+			/* ignored */ }
+		try {
+			PST.close();
+		} catch (Exception e) {
+			/* ignored */ }
+		try {
+			conn.close();
+		} catch (Exception e) {
+			/* ignored */ }
 	}
 
 	public void wysw() {
@@ -168,11 +173,11 @@ public class WindowAccount extends JFrame implements ActionListener {
 		}
 	}
 
-	public void loan()
-	{
+	public void loan() {
 		try {
 
-			String sql = "select tytul, status, data from historia where user='" + WindowSignIn.Mlogin + "' order by data desc";
+			String sql = "select tytul, status, data from historia where user='" + WindowSignIn.Mlogin
+					+ "' order by data desc";
 			PST = conn.createStatement();
 			rs = PST.executeQuery(sql);
 		}
@@ -191,14 +196,14 @@ public class WindowAccount extends JFrame implements ActionListener {
 		tablica.validate();
 		tablica.revalidate();
 		tablica.repaint();
-		
+
 	}
 
-	public void loan_current()
-	{
+	public void loan_current() {
 		try {
 
-			String sql = "select tytul, data from loan_list_open where status_id=3 and user='" + WindowSignIn.Mlogin + "' order by data desc";
+			String sql = "select tytul, data from loan_list_open where status_id=3 and user='" + WindowSignIn.Mlogin
+					+ "' order by data desc";
 			PST = conn.createStatement();
 			rs = PST.executeQuery(sql);
 		}
@@ -217,11 +222,9 @@ public class WindowAccount extends JFrame implements ActionListener {
 		aktualne.validate();
 		aktualne.revalidate();
 		aktualne.repaint();
-		
+
 	}
 
-	
-	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -235,43 +238,42 @@ public class WindowAccount extends JFrame implements ActionListener {
 		}
 
 		else if (source == btnWr) {
+			
 			dispose();
 			WindowSemiFin WindowMain = new WindowSemiFin();
 			WindowMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			WindowMain.setVisible(true);
-		}
-		else if (source == btnAcc) {
 			
-			
-			
-			String simie=imie.getText();
-			String snazwisko=nazwisko.getText();
-			String sulica=ulica.getText();
-			String smieszk=numm.getText();
-			String skod=kod.getText();
-			String spesel=pesel.getText();
-			String smiasto=miasto.getText();
-			
-			try{
-			
-				String sql = "UPDATE users SET imie= ?, nazwisko=?, ulica=?, num_miesz=?, kod_pocz=?, pesel=?, miasto=? WHERE login='" + WindowSignIn.Mlogin + "'";;
-				PS=conn.prepareStatement(sql);
-				PS.setString(1,simie);
-				PS.setString(2,snazwisko);
-				PS.setString(3,sulica);
-				PS.setString(4,smieszk);
-				PS.setString(5,skod);
-				PS.setString(6,spesel);
-				PS.setString(7,smiasto);
-				PS.executeUpdate(); 
-				JOptionPane.showMessageDialog(this,"Zaktualizowano pomyï¿½lnie.");
-				
-				
-				
-			}catch(Exception a){
-				
-				JOptionPane.showMessageDialog(null,a);
-				
+		} else if (source == btnAcc) {
+
+			String simie = imie.getText();
+			String snazwisko = nazwisko.getText();
+			String sulica = ulica.getText();
+			String smieszk = numm.getText();
+			String skod = kod.getText();
+			String spesel = pesel.getText();
+			String smiasto = miasto.getText();
+
+			try {
+
+				String sql = "UPDATE users SET imie= ?, nazwisko=?, ulica=?, num_miesz=?, kod_pocz=?, pesel=?, miasto=? WHERE login='"
+						+ WindowSignIn.Mlogin + "'";
+				;
+				PS = conn.prepareStatement(sql);
+				PS.setString(1, simie);
+				PS.setString(2, snazwisko);
+				PS.setString(3, sulica);
+				PS.setString(4, smieszk);
+				PS.setString(5, skod);
+				PS.setString(6, spesel);
+				PS.setString(7, smiasto);
+				PS.executeUpdate();
+				JOptionPane.showMessageDialog(this, "Zaktualizowano pomyï¿½lnie.");
+
+			} catch (Exception a) {
+
+				JOptionPane.showMessageDialog(null, a);
+
 			}
 		}
 
@@ -283,21 +285,21 @@ public class WindowAccount extends JFrame implements ActionListener {
 
 		// names of columns
 		Vector<String> columnNames = new Vector<String>();
-//		columnNames.add("ID");
-//		columnNames.add("Imie Autora");
-//		columnNames.add("Nazwisko autora");
-//		columnNames.add("Tytu³");
-//		columnNames.add("Rok publikacji");
-//		columnNames.add("ISBN");
-//		columnNames.add("Wydawnictwo");
-//		columnNames.add("Kategoria");
-//		columnNames.add("Status");
-//		
+		// columnNames.add("ID");
+		// columnNames.add("Imie Autora");
+		// columnNames.add("Nazwisko autora");
+		// columnNames.add("Tytuï¿½");
+		// columnNames.add("Rok publikacji");
+		// columnNames.add("ISBN");
+		// columnNames.add("Wydawnictwo");
+		// columnNames.add("Kategoria");
+		// columnNames.add("Status");
+		//
 
 		int columnCount = metaData.getColumnCount();
 
 		for (int column = 1; column <= columnCount; column++) {
-		columnNames.add(metaData.getColumnName(column));
+			columnNames.add(metaData.getColumnName(column));
 		}
 
 		// data of the table
@@ -310,9 +312,6 @@ public class WindowAccount extends JFrame implements ActionListener {
 			data.add(vector);
 		}
 
-		return new DefaultTableModel(data, columnNames);
+		return new SearchTable(data, columnNames);
 	}
 }
-
-	
-
