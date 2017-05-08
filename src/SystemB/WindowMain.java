@@ -77,7 +77,7 @@ public class WindowMain extends JFrame implements ActionListener {
 		if (source==btnSzukaj)
 		{
 			WindowSemiFin WindowSemiFin= new WindowSemiFin();
-			WindowSemiFin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			//WindowSemiFin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			WindowSemiFin.setVisible(true);
 			
 		}
@@ -90,7 +90,7 @@ public class WindowMain extends JFrame implements ActionListener {
 		
 		else if(source==btnMojeKonto){
 			WindowAccount WindowAccount= new WindowAccount();
-			WindowAccount.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			//WindowAccount.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			WindowAccount.setVisible(true);	
 		}
 		

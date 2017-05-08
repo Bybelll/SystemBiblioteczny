@@ -10,12 +10,12 @@ import SystemB.Window;
 import java.sql.*;
 import java.util.Vector;
 
-public class WindowAccount extends JFrame implements ActionListener {
+public class WindowAccount extends JPanel implements ActionListener {
 
 	JFrame frame;
 	private JTable table, table2;
 	JButton btnWyloguj;
-	JButton btnWr, btnAcc;
+	JButton btnWr, btnAcc, btnZmieHaso;
 	JTextField imie, nazwisko, ulica, numm, kod, miasto, pesel;
 	Connection conn;
 	ResultSet rs;
@@ -24,108 +24,110 @@ public class WindowAccount extends JFrame implements ActionListener {
 	JScrollPane tablica, aktualne;
 
 	public WindowAccount() {
-		getContentPane().setLayout(null);
+		this.setLayout(null);
 
 		conn = DatabaseConnection.ConnectDbs();
 
 		imie = new JTextField();
 		imie.setBounds(15, 60, 115, 25);
-		getContentPane().add(imie);
+		this.add(imie);
 
 		JLabel lblImi = new JLabel("Imi\u0119");
 		lblImi.setBounds(15, 40, 69, 20);
-		getContentPane().add(lblImi);
+		this.add(lblImi);
 
 		nazwisko = new JTextField();
 		nazwisko.setBounds(15, 110, 146, 25);
-		getContentPane().add(nazwisko);
+		this.add(nazwisko);
 
 		JLabel lblNazwisko = new JLabel("Nazwisko");
 		lblNazwisko.setBounds(15, 90, 69, 20);
-		getContentPane().add(lblNazwisko);
+		this.add(lblNazwisko);
 
 		ulica = new JTextField();
 		ulica.setBounds(15, 160, 146, 25);
-		getContentPane().add(ulica);
+		this.add(ulica);
 
 		JLabel lblUlicaINr = new JLabel("Ulica i nr domu");
 		lblUlicaINr.setBounds(15, 140, 146, 20);
-		getContentPane().add(lblUlicaINr);
+		this.add(lblUlicaINr);
 
 		numm = new JTextField();
 		numm.setBounds(15, 210, 77, 25);
-		getContentPane().add(numm);
+		this.add(numm);
 
 		JLabel lblNumerMieszkania = new JLabel("Numer mieszkania");
 		lblNumerMieszkania.setBounds(15, 190, 146, 20);
-		getContentPane().add(lblNumerMieszkania);
+		this.add(lblNumerMieszkania);
 
 		JLabel lblKodPocztowy = new JLabel("Kod pocztowy");
 		lblKodPocztowy.setBounds(15, 240, 103, 20);
-		getContentPane().add(lblKodPocztowy);
+		this.add(lblKodPocztowy);
 
 		kod = new JTextField();
 		kod.setBounds(15, 260, 103, 25);
-		getContentPane().add(kod);
+		this.add(kod);
 
 		JLabel lblMiasto = new JLabel("Miasto");
 		lblMiasto.setBounds(148, 240, 69, 20);
-		getContentPane().add(lblMiasto);
+		this.add(lblMiasto);
 
 		miasto = new JTextField();
 		miasto.setBounds(136, 260, 131, 25);
-		getContentPane().add(miasto);
+		this.add(miasto);
 
 		JLabel lblNrPesel = new JLabel("Nr pesel");
 		lblNrPesel.setBounds(15, 290, 69, 20);
-		getContentPane().add(lblNrPesel);
+		this.add(lblNrPesel);
 
 		pesel = new JTextField();
 		pesel.setBounds(15, 310, 222, 25);
-		getContentPane().add(pesel);
+		this.add(pesel);
 
 		JLabel lblAktualneWyp = new JLabel("Aktualne wypo�yczenia");
 		lblAktualneWyp.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAktualneWyp.setBounds(470, 10, 120, 26);
-		getContentPane().add(lblAktualneWyp);
+		this.add(lblAktualneWyp);
 
 		aktualne = new JScrollPane();
 		aktualne.setSize(450, 115);
 		aktualne.setLocation(300, 35);
-		getContentPane().add(aktualne);
+		this.add(aktualne);
 
 		JLabel lblHistoriaWypoycze = new JLabel("Historia wypo�ycze�");
 		lblHistoriaWypoycze.setHorizontalAlignment(SwingConstants.CENTER);
 		lblHistoriaWypoycze.setBounds(470, 155, 120, 26);
-		getContentPane().add(lblHistoriaWypoycze);
+		this.add(lblHistoriaWypoycze);
 
 		tablica = new JScrollPane();
 		tablica.setSize(450, 200);
 		tablica.setLocation(300, 180);
-		getContentPane().add(tablica);
+		this.add(tablica);
 
 		// table = new JTable();
 		// table.setBounds(407, 56, 358, 226);
-		// getContentPane().add(table);
+		// this.add(table);
 		//
-		setSize(800, 436);
-		setTitle("Twoje Konto");
-		getContentPane().setLayout(null);
-
+		
 		btnWyloguj = new JButton("Wyloguj");
 		btnWyloguj.setBounds(660, 0, 115, 29);
-		getContentPane().add(btnWyloguj);
+		this.add(btnWyloguj);
 		btnWyloguj.addActionListener(this);
 
 		btnWr = new JButton("Wr��");
 		btnWr.setBounds(15, 10, 115, 29);
-		getContentPane().add(btnWr);
+		this.add(btnWr);
 		btnWr.addActionListener(this);
 
 		btnAcc = new JButton("Zatwierdz zmiany");
 		btnAcc.setBounds(15, 350, 180, 35);
-		getContentPane().add(btnAcc);
+		this.add(btnAcc);
 		btnAcc.addActionListener(this);
+		
+		btnZmieHaso = new JButton("Zmie\u0144 has\u0142o");
+		btnZmieHaso.setBounds(148, 9, 133, 29);
+		this.add(btnZmieHaso);
+		btnZmieHaso.addActionListener(this);
 
 		wysw();
 		loan();
@@ -231,18 +233,24 @@ public class WindowAccount extends JFrame implements ActionListener {
 		Object source = e.getSource();
 
 		if (source == btnWyloguj) {
-			dispose();
-			Window Window = new Window();
-			Window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			Window.setVisible(true);
+			//dispose();
+			//Window Window = new Window();
+			//Window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			//Window.setVisible(true);
 		}
 
 		else if (source == btnWr) {
 			
-			dispose();
-			WindowSemiFin WindowMain = new WindowSemiFin();
-			WindowMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			WindowMain.setVisible(true);
+			//WindowSemiFin WindowMain = new WindowSemiFin();
+			//WindowMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			//WindowMain.setVisible(true);
+		}	else if (source == btnZmieHaso) {
+			
+			PassChange Window = new PassChange();
+			Window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			Window.setVisible(true);
+			
+			
 			
 		} else if (source == btnAcc) {
 

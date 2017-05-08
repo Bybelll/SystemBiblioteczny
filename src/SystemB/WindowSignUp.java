@@ -19,6 +19,7 @@ public class WindowSignUp extends JFrame implements ActionListener {
 	Connection conn = null;
 	ResultSet RS = null;
 	PreparedStatement PST = null;
+	Statement ST = null;
 
 	public WindowSignUp() {
 		setSize(800, 436);
@@ -118,10 +119,23 @@ public class WindowSignUp extends JFrame implements ActionListener {
 		String kod = tkod.getText();
 		String pesel = tpesel.getText();
 		String miasto = tmiasto.getText();
-
+		System.out.println(tImie.getText());
+		if (imie.length()>0 && nazwisko.length()>0 && login.length()>0 && pass.length()>0)
+		{
 		try {
 
-			String sql = "INSERT INTO users (imie, nazwisko, login, haslo, ulica, num_miesz, kod_pocz, pesel, miasto) VALUES (?,?,?,?,?,?,?,?,?)";
+			String sql = "SELECT count(*) as cnt from users where login='"+login+"'";
+			PST = conn.prepareStatement(sql);
+			RS = PST.executeQuery();
+			Integer check = null;
+			if(RS.next())
+			{
+				check = RS.getInt("cnt");
+			}
+			
+			if (check == null || check == 0)
+			{
+			sql = "INSERT INTO users (imie, nazwisko, login, haslo, ulica, num_miesz, kod_pocz, pesel, miasto) VALUES (?,?,?,?,?,?,?,?,?)";
 			PST = conn.prepareStatement(sql);
 			PST.setString(1, imie);
 			PST.setString(2, nazwisko);
@@ -134,6 +148,13 @@ public class WindowSignUp extends JFrame implements ActionListener {
 			PST.setString(9, miasto);
 			PST.executeUpdate();
 			JOptionPane.showMessageDialog(this, "Zarejestrowano pomyï¿½lnie.");
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(this, "Podany login ju¿ istnieje");
+				JOptionPane.showMessageDialog(this, check);
+			}
+			
 
 		} catch (Exception a) {
 
@@ -141,6 +162,11 @@ public class WindowSignUp extends JFrame implements ActionListener {
 
 		}
 
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(this, "Pola imie, nazwisko, login i has³o nie mog¹ byæ puste");
+		}
 		if (source == bSignUp) {
 			Window window = new Window();
 			window.setVisible(true);
