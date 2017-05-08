@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-import SystemB.Window;
 import java.sql.*;
 import java.util.Vector;
 
@@ -237,6 +236,9 @@ public class WindowAccount extends JPanel implements ActionListener {
 			//Window Window = new Window();
 			//Window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			//Window.setVisible(true);
+			WindowSemiFin windowSemiFin= new WindowSemiFin();
+			windowSemiFin.setVisible(true);	
+			dispose();
 		}
 
 		else if (source == btnWr) {

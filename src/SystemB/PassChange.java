@@ -1,7 +1,5 @@
 package SystemB;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -11,7 +9,6 @@ import java.sql.Statement;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -34,7 +31,7 @@ public class PassChange extends JFrame implements ActionListener {
 	public PassChange() {
 
 		setSize(800, 436);
-		setTitle("Zmiana has³a");
+		setTitle("Zmiana hasï¿½a");
 		setLayout(null);
 
 		conn = DatabaseConnection.ConnectDbs();
@@ -103,13 +100,13 @@ public class PassChange extends JFrame implements ActionListener {
 					PS = conn.prepareStatement(sql1);
 					PS.executeUpdate();
 
-					JOptionPane.showMessageDialog(this, "Has³o zmieniono pomyœlnie");
+					JOptionPane.showMessageDialog(this, "Hasï¿½o zmieniono pomyï¿½lnie");
 					dispose();
 					
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(this, "Poda³eœ/aœ niepoprawne stare has³o lub Twoje nowe has³a nie s¹ takie same.");
+					JOptionPane.showMessageDialog(this, "Podaï¿½eï¿½/aï¿½ niepoprawne stare hasï¿½o lub Twoje nowe hasï¿½a nie sï¿½ takie same.");
 				}
 			
 		
@@ -122,6 +119,6 @@ public class PassChange extends JFrame implements ActionListener {
 	
 }
 			else{
-				JOptionPane.showMessageDialog(this, "Nowe has³o musi siê ró¿niæ od starego!");
+				JOptionPane.showMessageDialog(this, "Nowe hasï¿½o musi siï¿½ rï¿½niï¿½ od starego!");
 			}
 }}}
