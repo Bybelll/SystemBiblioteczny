@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -16,7 +15,6 @@ import javax.swing.JButton;
 
 public class PassChange extends JFrame implements ActionListener {
 
-	private JPanel contentPane;
 	private JTextField oldPass;
 	private JTextField newPass;
 	private JTextField newPass1;
@@ -70,55 +68,55 @@ public class PassChange extends JFrame implements ActionListener {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-	
-		
+
 		Object source = e.getSource();
-		
-		if(source == btnChangePass){
-			
+
+		if (source == btnChangePass) {
+
 			OldPas = oldPass.getText();
 			NewPas1 = newPass.getText();
 			NewPas2 = newPass1.getText();
-			if(!OldPas.equals(NewPas1) || !OldPas.equals(NewPas2))
-			{
-			try{
-				String sql = "SELECT count(*) as cnt from users where login='" + WindowSignIn.Mlogin + "' AND haslo='"+OldPas+"'";
-				PST = conn.createStatement();
-				rs = PST.executeQuery(sql);
-				Integer check = null;
-				if(rs.next())
-				{
-					check = rs.getInt("cnt");
-				}
-				
-				if(check==1 && NewPas1.equals(NewPas2))
-				{
-					String sql1 = "UPDATE users SET haslo='"+NewPas1+"' WHERE login='" + WindowSignIn.Mlogin + "'";
-					PS = conn.prepareStatement(sql1);
-					PS.executeUpdate();
+			if (!OldPas.equals(NewPas1) || !OldPas.equals(NewPas2)) {
+				try {
+					String sql = "SELECT count(*) as cnt from users where login='" + Window.Mlogin + "' AND haslo='"
+							+ OldPas + "'";
+					PST = conn.createStatement();
+					rs = PST.executeQuery(sql);
+					Integer check = null;
+					if (rs.next()) {
+						check = rs.getInt("cnt");
+					}
 
-					JOptionPane.showMessageDialog(this, "Has�o zmieniono pomy�lnie");
-					dispose();
-					
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(this, "Poda�e�/a� niepoprawne stare has�o lub Twoje nowe has�a nie s� takie same.");
-				}
-			
-		
-			} catch (Exception a) {
+					if (check == 1 && NewPas1.equals(NewPas2)) {
+						String sql1 = "UPDATE users SET haslo='" + NewPas1 + "' WHERE login='" + Window.Mlogin + "'";
+						PS = conn.prepareStatement(sql1);
+						PS.executeUpdate();
 
-				JOptionPane.showMessageDialog(null, a);
+						JOptionPane.showMessageDialog(this, "Has�o zmieniono pomy�lnie");
+						dispose();
 
-			}
-			
-	
-}
-			else{
+					} else {
+						JOptionPane.showMessageDialog(this,
+								"Poda�e�/a� niepoprawne stare has�o lub Twoje nowe has�a nie s� takie same.");
+					}
+
+				} catch (Exception a) {
+
+					JOptionPane.showMessageDialog(null, a);
+
+				}
+
+			} else {
 				JOptionPane.showMessageDialog(this, "Nowe has�o musi si� r�ni� od starego!");
 			}
-}}}
+		}
+	}
+}

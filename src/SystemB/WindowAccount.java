@@ -13,8 +13,7 @@ public class WindowAccount extends JPanel implements ActionListener {
 
 	JFrame frame;
 	private JTable table, table2;
-	JButton btnWyloguj;
-	JButton btnWr, btnAcc, btnZmieHaso;
+	JButton btnAcc, btnZmieHaso;
 	JTextField imie, nazwisko, ulica, numm, kod, miasto, pesel;
 	Connection conn;
 	ResultSet rs;
@@ -103,21 +102,6 @@ public class WindowAccount extends JPanel implements ActionListener {
 		tablica.setLocation(300, 180);
 		this.add(tablica);
 
-		// table = new JTable();
-		// table.setBounds(407, 56, 358, 226);
-		// this.add(table);
-		//
-		
-		btnWyloguj = new JButton("Wyloguj");
-		btnWyloguj.setBounds(660, 0, 115, 29);
-		this.add(btnWyloguj);
-		btnWyloguj.addActionListener(this);
-
-		btnWr = new JButton("Wr��");
-		btnWr.setBounds(15, 10, 115, 29);
-		this.add(btnWr);
-		btnWr.addActionListener(this);
-
 		btnAcc = new JButton("Zatwierdz zmiany");
 		btnAcc.setBounds(15, 350, 180, 35);
 		this.add(btnAcc);
@@ -150,7 +134,7 @@ public class WindowAccount extends JPanel implements ActionListener {
 
 		try {
 
-			String sql = "SELECT * FROM users WHERE login='" + WindowSignIn.Mlogin + "'";
+			String sql = "SELECT * FROM users WHERE login='" + Window.Mlogin + "'";
 			PST = conn.createStatement();
 			rs = PST.executeQuery(sql);
 			rs.next();
@@ -177,7 +161,7 @@ public class WindowAccount extends JPanel implements ActionListener {
 	public void loan() {
 		try {
 
-			String sql = "select tytul, status, data from historia where user='" + WindowSignIn.Mlogin
+			String sql = "select tytul, status, data from historia where user='" + Window.Mlogin
 					+ "' order by data desc";
 			PST = conn.createStatement();
 			rs = PST.executeQuery(sql);
@@ -203,7 +187,7 @@ public class WindowAccount extends JPanel implements ActionListener {
 	public void loan_current() {
 		try {
 
-			String sql = "select tytul, data from loan_list_open where status_id=3 and user='" + WindowSignIn.Mlogin
+			String sql = "select tytul, data from loan_list_open where status_id=3 and user='" + Window.Mlogin
 					+ "' order by data desc";
 			PST = conn.createStatement();
 			rs = PST.executeQuery(sql);
@@ -231,28 +215,11 @@ public class WindowAccount extends JPanel implements ActionListener {
 
 		Object source = e.getSource();
 
-		if (source == btnWyloguj) {
-			//dispose();
-			//Window Window = new Window();
-			//Window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			//Window.setVisible(true);
-			WindowSemiFin windowSemiFin= new WindowSemiFin();
-			windowSemiFin.setVisible(true);	
-			dispose();
-		}
-
-		else if (source == btnWr) {
-			
-			//WindowSemiFin WindowMain = new WindowSemiFin();
-			//WindowMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			//WindowMain.setVisible(true);
-		}	else if (source == btnZmieHaso) {
+		if (source == btnZmieHaso) {
 			
 			PassChange Window = new PassChange();
 			Window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			Window.setVisible(true);
-			
-			
 			
 		} else if (source == btnAcc) {
 
@@ -267,7 +234,7 @@ public class WindowAccount extends JPanel implements ActionListener {
 			try {
 
 				String sql = "UPDATE users SET imie= ?, nazwisko=?, ulica=?, num_miesz=?, kod_pocz=?, pesel=?, miasto=? WHERE login='"
-						+ WindowSignIn.Mlogin + "'";
+						+ Window.Mlogin + "'";
 				;
 				PS = conn.prepareStatement(sql);
 				PS.setString(1, simie);

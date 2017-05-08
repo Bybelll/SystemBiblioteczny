@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
 import java.awt.Dimension;
@@ -68,6 +67,15 @@ public class MainWindow extends JFrame {
 		content_panel.add(profile, "Konto");
 
 	}
+	
+	public void Wyloguj(){
+		Window window = new Window();
+		window.setVisible(true);
+		dispose();
+		Window.Mlogin = null;
+		Window.MUserID = null;
+		Window.MUserType = null;
+	}
 
 	private class ButtonHandler implements ActionListener {
 
@@ -93,12 +101,12 @@ public class MainWindow extends JFrame {
 				cl.show(content_panel, "Konto");
 				
 			} else if (source == btnWyloguj) {
-				Window window = new Window();
-				window.setVisible(true);
-				dispose();
+				Wyloguj();
 			}
 		}
 
 	}
+	
+	
 
 }

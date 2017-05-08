@@ -25,7 +25,7 @@ import java.awt.Color;
 public class WindowSemiFin extends JPanel implements ActionListener {
 
 	JTextField txtSzukaj;
-	JButton btnSzukaj, btnWyloguj, btnMojeKonto, btnWypozycz;
+	JButton btnSzukaj, btnMojeKonto, btnWypozycz;
 
 	JTable table;
 	JScrollPane tablica;
@@ -210,13 +210,10 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 
 		Object source = e.getSource();
 
-		if (source == btnWyloguj) {
-			// dispose();
-			
-		} else if (source == btnMojeKonto) {
+		if (source == btnMojeKonto) {
 			WindowAccount WindowAccount = new WindowAccount();
 			WindowAccount.setVisible(true);
-			// dispose();
+			
 		} else if (source == btnSzukaj) {
 			searching();
 		} else if (source == btnWypozycz) {
@@ -265,7 +262,7 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 			if (wypozyczenie == JOptionPane.YES_OPTION) {
 
 				try {
-					String sql = "CALL `sql11171543`.`borrow`(" + selection + ", " + WindowSignIn.MUserID + ", 3)";
+					String sql = "CALL `sql11171543`.`borrow`(" + selection + ", " + Window.MUserID + ", 3)";
 					PST = conn.prepareStatement(sql);
 					rs = PST.executeQuery();
 				} catch (Exception a) {

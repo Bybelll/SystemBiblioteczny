@@ -120,52 +120,44 @@ public class WindowSignUp extends JFrame implements ActionListener {
 		String pesel = tpesel.getText();
 		String miasto = tmiasto.getText();
 		System.out.println(tImie.getText());
-		if (imie.length()>0 && nazwisko.length()>0 && login.length()>0 && pass.length()>0)
-		{
-		try {
+		if (imie.length() > 0 && nazwisko.length() > 0 && login.length() > 0 && pass.length() > 0) {
+			try {
 
-			String sql = "SELECT count(*) as cnt from users where login='"+login+"'";
-			PST = conn.prepareStatement(sql);
-			RS = PST.executeQuery();
-			Integer check = null;
-			if(RS.next())
-			{
-				check = RS.getInt("cnt");
+				String sql = "SELECT count(*) as cnt from users where login='" + login + "'";
+				PST = conn.prepareStatement(sql);
+				RS = PST.executeQuery();
+				Integer check = null;
+				if (RS.next()) {
+					check = RS.getInt("cnt");
+				}
+
+				if (check == null || check == 0) {
+					sql = "INSERT INTO users (imie, nazwisko, login, haslo, ulica, num_miesz, kod_pocz, pesel, miasto) VALUES (?,?,?,?,?,?,?,?,?)";
+					PST = conn.prepareStatement(sql);
+					PST.setString(1, imie);
+					PST.setString(2, nazwisko);
+					PST.setString(3, login);
+					PST.setString(4, pass);
+					PST.setString(5, ulica);
+					PST.setString(6, mieszk);
+					PST.setString(7, kod);
+					PST.setString(8, pesel);
+					PST.setString(9, miasto);
+					PST.executeUpdate();
+					JOptionPane.showMessageDialog(this, "Zarejestrowano pomyï¿½lnie.");
+				} else {
+					JOptionPane.showMessageDialog(this, "Podany login juï¿½ istnieje");
+					JOptionPane.showMessageDialog(this, check);
+				}
+
+			} catch (Exception a) {
+
+				JOptionPane.showMessageDialog(null, a);
+
 			}
-			
-			if (check == null || check == 0)
-			{
-			sql = "INSERT INTO users (imie, nazwisko, login, haslo, ulica, num_miesz, kod_pocz, pesel, miasto) VALUES (?,?,?,?,?,?,?,?,?)";
-			PST = conn.prepareStatement(sql);
-			PST.setString(1, imie);
-			PST.setString(2, nazwisko);
-			PST.setString(3, login);
-			PST.setString(4, pass);
-			PST.setString(5, ulica);
-			PST.setString(6, mieszk);
-			PST.setString(7, kod);
-			PST.setString(8, pesel);
-			PST.setString(9, miasto);
-			PST.executeUpdate();
-			JOptionPane.showMessageDialog(this, "Zarejestrowano pomyï¿½lnie.");
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(this, "Podany login ju¿ istnieje");
-				JOptionPane.showMessageDialog(this, check);
-			}
-			
 
-		} catch (Exception a) {
-
-			JOptionPane.showMessageDialog(null, a);
-
-		}
-
-		}
-		else
-		{
-			JOptionPane.showMessageDialog(this, "Pola imie, nazwisko, login i has³o nie mog¹ byæ puste");
+		} else {
+			JOptionPane.showMessageDialog(this, "Pola imie, nazwisko, login i hasï¿½o nie mogï¿½ byï¿½ puste");
 		}
 		if (source == bSignUp) {
 			Window window = new Window();
