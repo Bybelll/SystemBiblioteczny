@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import java.sql.*;
 
@@ -14,8 +15,9 @@ public class WindowSignUp extends JFrame implements ActionListener {
 
 	JButton bSignUp;
 	JLabel lLogin, lPassword;
-	JTextField tLogin, tPassword, tImie, tnazwisko, tulica, tmiasto, tpesel, tkod, num_mieszk;
+	JTextField tLogin, tImie, tnazwisko, tulica, tmiasto, tpesel, tkod, num_mieszk;
 	JTextField textField;
+	JPasswordField tPassword;
 	Connection conn = null;
 	ResultSet RS = null;
 	PreparedStatement PST = null;
@@ -101,7 +103,7 @@ public class WindowSignUp extends JFrame implements ActionListener {
 		tLogin.setBounds(400, 70, 100, 20);
 		add(tLogin);
 
-		tPassword = new JTextField();
+		tPassword = new JPasswordField();
 		tPassword.setBounds(400, 110, 100, 20);
 		add(tPassword);
 	}
@@ -113,13 +115,13 @@ public class WindowSignUp extends JFrame implements ActionListener {
 		String imie = tImie.getText();
 		String nazwisko = tnazwisko.getText();
 		String login = tLogin.getText();
-		String pass = tPassword.getText();
+		String pass = new String(tPassword.getPassword());
 		String ulica = tulica.getText();
 		String mieszk = num_mieszk.getText();
 		String kod = tkod.getText();
 		String pesel = tpesel.getText();
 		String miasto = tmiasto.getText();
-		System.out.println(tImie.getText());
+
 		if (imie.length() > 0 && nazwisko.length() > 0 && login.length() > 0 && pass.length() > 0) {
 			try {
 
@@ -132,7 +134,7 @@ public class WindowSignUp extends JFrame implements ActionListener {
 				}
 
 				if (check == null || check == 0) {
-					sql = "INSERT INTO users (imie, nazwisko, login, haslo, ulica, num_miesz, kod_pocz, pesel, miasto) VALUES (?,?,?,?,?,?,?,?,?)";
+					sql = "INSERT INTO users (imie, nazwisko, login, haslo, ulica, num_miesz, kod_pocz, pesel, miasto) VALUES (?,?,?,md5(?),?,?,?,?,?)";
 					PST = conn.prepareStatement(sql);
 					PST.setString(1, imie);
 					PST.setString(2, nazwisko);

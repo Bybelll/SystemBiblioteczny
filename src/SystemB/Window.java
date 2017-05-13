@@ -23,7 +23,7 @@ public class Window extends JFrame implements ActionListener {
 	JTextField tLogin, tPassword;
 	static String Mlogin;
 	static String MUserID;
-	static String MUserType;
+	static int MUserType;
 
 	Connection conn = null;
 	ResultSet RS = null;
@@ -87,7 +87,7 @@ public class Window extends JFrame implements ActionListener {
 
 					Mlogin = tLogin.getText();
 					MUserID = RS.getString("user_id");
-					MUserType = RS.getString("admin");
+					MUserType = RS.getInt("admin");
 					dispose();
 					MainWindow WindowMain = new MainWindow();
 					WindowMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

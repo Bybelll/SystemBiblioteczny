@@ -43,8 +43,7 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 	public WindowSemiFin() {
 		setBackground(Color.WHITE);
 		conn = DatabaseConnection.ConnectDbs();
-		
-		
+
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWeights = new double[] { 0.1, 0.3, 0.3, 0.3, 0.1 };
 		gridBagLayout.rowWeights = new double[] { 0.2, 0.2, 0.5, 0.1 };
@@ -149,15 +148,15 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 
 			PST = conn.prepareStatement(sql);
 			rs = PST.executeQuery();
-		}
-
-		catch (Exception a) {
+			
+		} catch (Exception a) {
 			JOptionPane.showMessageDialog(null, a);
 		}
 
 		try {
 			table = new JTable(buildTableModel(rs));
 			tablica.setViewportView(table);
+			
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -165,7 +164,7 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 		tablica.validate();
 		tablica.revalidate();
 		tablica.repaint();
-
+		
 	}
 
 	public void searching() {
@@ -186,9 +185,8 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 			PST = conn.prepareStatement(sql);
 			PST.setString(1, querry);
 			rs = PST.executeQuery();
-		}
 
-		catch (Exception a) {
+		} catch (Exception a) {
 			JOptionPane.showMessageDialog(null, a);
 		}
 
@@ -211,9 +209,9 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 		Object source = e.getSource();
 
 		if (source == btnMojeKonto) {
-			WindowAccount WindowAccount = new WindowAccount();
+			WindowAccount WindowAccount = new WindowAccount(Window.MUserID);
 			WindowAccount.setVisible(true);
-			
+
 		} else if (source == btnSzukaj) {
 			searching();
 		} else if (source == btnWypozycz) {
@@ -250,10 +248,9 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 
 		Integer row = new Integer(table.getSelectedRow());
 		selection = (Integer) (table.getValueAt(row, 0));
-		System.out.println(selection);
 		String book_title = new String();
 		book_title = (String) table.getValueAt(row, 1);
-		
+
 		if (!table.getValueAt(row, 7).equals("dostepna")) {
 			JOptionPane.showMessageDialog(null, "Ta pozycja jest niedostepna.");
 		} else {
@@ -265,14 +262,15 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 					String sql = "CALL `sql11171543`.`borrow`(" + selection + ", " + Window.MUserID + ", 3)";
 					PST = conn.prepareStatement(sql);
 					rs = PST.executeQuery();
+
 				} catch (Exception a) {
 					JOptionPane.showMessageDialog(null, a);
 				}
 
-				JOptionPane.showMessageDialog(null, "Ksi��ka wypo�yczona!");
+				JOptionPane.showMessageDialog(null, "Książka wypożyczona!");
 			} else {
 				JOptionPane.showMessageDialog(null,
-						"Wystapi� b��d. Sprobuj ponownie pozniej lub skontaktuj si� z bibliotekarzem.");
+						"Wystapił błąd. Sprobuj ponownie pozniej lub skontaktuj się z bibliotekarzem.");
 			}
 		}
 	}

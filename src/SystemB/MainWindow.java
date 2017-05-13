@@ -15,7 +15,7 @@ import javax.swing.UIManager;
 
 public class MainWindow extends JFrame {
 
-	JButton btnKatalog, btnNewButton_1, btnWyloguj, btnNewButton_3;
+	JButton btnKatalog, btnKonto, btnWyloguj, btnUzytkownicy;
 	JPanel content_panel;
 
 	public MainWindow() {
@@ -38,11 +38,20 @@ public class MainWindow extends JFrame {
 		menu_panel.add(btnKatalog);
 		btnKatalog.addActionListener(listener);
 
-		btnNewButton_1 = new JButton("konto");
-		btnNewButton_1.setForeground(Color.BLACK);
-		btnNewButton_1.setBackground(UIManager.getColor("Button.background"));
-		menu_panel.add(btnNewButton_1);
-		btnNewButton_1.addActionListener(listener);
+		btnKonto = new JButton("konto");
+		btnKonto.setForeground(Color.BLACK);
+		btnKonto.setBackground(UIManager.getColor("Button.background"));
+		menu_panel.add(btnKonto);
+		btnKonto.addActionListener(listener);
+
+		if (Window.MUserType == 1) {
+
+			btnUzytkownicy = new JButton("użytkownicy");
+			btnUzytkownicy.setForeground(Color.BLACK);
+			btnUzytkownicy.setBackground(UIManager.getColor("Button.background"));
+			menu_panel.add(btnUzytkownicy);
+			btnUzytkownicy.addActionListener(listener);
+		}
 
 		btnWyloguj = new JButton("wyloguj");
 		btnWyloguj.setForeground(Color.BLACK);
@@ -50,31 +59,27 @@ public class MainWindow extends JFrame {
 		menu_panel.add(btnWyloguj);
 		btnWyloguj.addActionListener(listener);
 
-		btnNewButton_3 = new JButton("co�tam co�...");
-		btnNewButton_3.setForeground(Color.BLACK);
-		btnNewButton_3.setBackground(UIManager.getColor("Button.background"));
-		menu_panel.add(btnNewButton_3);
-		btnNewButton_3.addActionListener(listener);
-
 		content_panel = new JPanel();
 		content_panel.setBackground(Color.WHITE);
 		getContentPane().add(content_panel);
 		content_panel.setLayout(new CardLayout(0, 0));
 
 		WindowSemiFin catalogue = new WindowSemiFin();
-		WindowAccount profile = new WindowAccount();
+		WindowAccount profile = new WindowAccount(Window.MUserID);
+		UserList users = new UserList();
 		content_panel.add(catalogue, "Katalog");
 		content_panel.add(profile, "Konto");
+		content_panel.add(users, "Users");
 
 	}
-	
-	public void Wyloguj(){
+
+	public void Wyloguj() {
 		Window window = new Window();
 		window.setVisible(true);
 		dispose();
 		Window.Mlogin = null;
 		Window.MUserID = null;
-		Window.MUserType = null;
+		Window.MUserType = 0;
 	}
 
 	private class ButtonHandler implements ActionListener {
@@ -92,21 +97,19 @@ public class MainWindow extends JFrame {
 				// content_panel.revalidate();
 				cl.show(content_panel, "Katalog");
 
-			} else if (source == btnNewButton_1) {
-				// JOptionPane.showMessageDialog(null,"btnNewButton_1");
-				// WindowAccount profile = new WindowAccount();
-				// content_panel.removeAll();
-				// content_panel.add(profile);
-				// content_panel.revalidate();
+			} else if (source == btnKonto) {
+
 				cl.show(content_panel, "Konto");
-				
+
+			} else if (source == btnUzytkownicy) {
+
+				cl.show(content_panel, "Users");
+
 			} else if (source == btnWyloguj) {
 				Wyloguj();
 			}
 		}
 
 	}
-	
-	
 
 }
