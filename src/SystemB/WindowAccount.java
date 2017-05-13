@@ -20,15 +20,18 @@ public class WindowAccount extends JPanel implements ActionListener {
 	private JTable table, table2;
 	JButton btnAcc, btnZmieHaso;
 	JTextField imie, nazwisko, ulica, numm, kod, miasto, pesel;
+	Connection conn;
+	ResultSet rs;
+	Statement PST;
+	PreparedStatement PS = null;
 	JScrollPane tablica, aktualne;
 
 	public WindowAccount(String userID) {
 
 		try {
-			if (DatabaseConnection.conn == null || DatabaseConnection.conn.isClosed()) {
-				DatabaseConnection.conn = DatabaseConnection.ConnectDbs();
+			if (conn == null || conn.isClosed()) {
+				conn = DatabaseConnection.ConnectDbs();
 			}
-			DatabaseConnection.PST = DatabaseConnection.conn.createStatement();
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -224,9 +227,9 @@ public class WindowAccount extends JPanel implements ActionListener {
 		loan_current(userID);
 
 		try {
-			DatabaseConnection.rs.close();
-			DatabaseConnection.conn.close();
-			DatabaseConnection.PST.close();
+			rs.close();
+			conn.close();
+			PST.close();
 		} catch (Exception e) {
 			/* ignored */
 		}
@@ -238,21 +241,22 @@ public class WindowAccount extends JPanel implements ActionListener {
 		try {
 
 			String sql = "SELECT * FROM users WHERE user_id='" + userID + "'";
-			DatabaseConnection.rs = DatabaseConnection.PST.executeQuery(sql);
-			DatabaseConnection.rs.next();
-			String imiee = DatabaseConnection.rs.getString("imie");
+			PST = conn.createStatement();
+			rs = PST.executeQuery(sql);
+			rs.next();
+			String imiee = rs.getString("imie");
 			imie.setText(imiee);
-			String nazw = DatabaseConnection.rs.getString("nazwisko");
+			String nazw = rs.getString("nazwisko");
 			nazwisko.setText(nazw);
-			String ul = DatabaseConnection.rs.getString("ulica");
+			String ul = rs.getString("ulica");
 			ulica.setText(ul);
-			String num = DatabaseConnection.rs.getString("num_miesz");
+			String num = rs.getString("num_miesz");
 			numm.setText(num);
-			String kodd = DatabaseConnection.rs.getString("kod_pocz");
+			String kodd = rs.getString("kod_pocz");
 			kod.setText(kodd);
-			String mias = DatabaseConnection.rs.getString("miasto");
+			String mias = rs.getString("miasto");
 			miasto.setText(mias);
-			String pes = DatabaseConnection.rs.getString("pesel");
+			String pes = rs.getString("pesel");
 			pesel.setText(pes);
 
 		} catch (Exception a) {
@@ -265,13 +269,14 @@ public class WindowAccount extends JPanel implements ActionListener {
 		try {
 
 			String sql = "select tytul, status, data from historia where user_id='" + userID + "' order by data desc";
-			DatabaseConnection.rs = DatabaseConnection.PST.executeQuery(sql);
+			PST = conn.createStatement();
+			rs = PST.executeQuery(sql);
 		} catch (Exception a) {
 			JOptionPane.showMessageDialog(null, a);
 		}
 
 		try {
-			table = new JTable(buildTableModel(DatabaseConnection.rs));
+			table = new JTable(buildTableModel(rs));
 			tablica.setViewportView(table);
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
@@ -288,7 +293,8 @@ public class WindowAccount extends JPanel implements ActionListener {
 
 			String sql = "select tytul, data from loan_list_open where status_id=3 and user_id='" + userID
 					+ "' order by data desc";
-			DatabaseConnection.rs = DatabaseConnection.PST.executeQuery(sql);
+			PST = conn.createStatement();
+			rs = PST.executeQuery(sql);
 		}
 
 		catch (Exception a) {
@@ -296,7 +302,7 @@ public class WindowAccount extends JPanel implements ActionListener {
 		}
 
 		try {
-			table2 = new JTable(buildTableModel(DatabaseConnection.rs));
+			table2 = new JTable(buildTableModel(rs));
 			aktualne.setViewportView(table2);
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
@@ -334,15 +340,15 @@ public class WindowAccount extends JPanel implements ActionListener {
 				String sql = "UPDATE users SET imie= ?, nazwisko=?, ulica=?, num_miesz=?, kod_pocz=?, pesel=?, miasto=? WHERE login='"
 						+ Window.Mlogin + "'";
 				;
-				DatabaseConnection.PS = DatabaseConnection.conn.prepareStatement(sql);
-				DatabaseConnection.PS.setString(1, simie);
-				DatabaseConnection.PS.setString(2, snazwisko);
-				DatabaseConnection.PS.setString(3, sulica);
-				DatabaseConnection.PS.setString(4, smieszk);
-				DatabaseConnection.PS.setString(5, skod);
-				DatabaseConnection.PS.setString(6, spesel);
-				DatabaseConnection.PS.setString(7, smiasto);
-				DatabaseConnection.PS.executeUpdate();
+				PS = conn.prepareStatement(sql);
+				PS.setString(1, simie);
+				PS.setString(2, snazwisko);
+				PS.setString(3, sulica);
+				PS.setString(4, smieszk);
+				PS.setString(5, skod);
+				PS.setString(6, spesel);
+				PS.setString(7, smiasto);
+				PS.executeUpdate();
 				JOptionPane.showMessageDialog(this, "Zaktualizowano pomy�lnie.");
 
 			} catch (Exception a) {

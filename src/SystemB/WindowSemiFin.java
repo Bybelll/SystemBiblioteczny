@@ -42,7 +42,7 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 
 	public WindowSemiFin() {
 		setBackground(Color.WHITE);
-//		DatabaseConnection.conn = DatabaseConnection.ConnectDbs();
+		conn = DatabaseConnection.ConnectDbs();
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWeights = new double[] { 0.1, 0.3, 0.3, 0.3, 0.1 };
