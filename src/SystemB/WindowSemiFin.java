@@ -2,12 +2,10 @@ package SystemB;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.Vector;
+import java.sql.Statement;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -17,15 +15,17 @@ import javax.swing.JScrollPane;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Color;
+import java.awt.Insets;
+import java.awt.Component;
+import javax.swing.Box;
 
 public class WindowSemiFin extends JPanel implements ActionListener {
 
 	JTextField txtSzukaj;
-	JButton btnSzukaj, btnMojeKonto, btnWypozycz;
+	JButton btnSzukaj, btnMojeKonto, btnWypozycz, btnAddBook, btnReturnBook, btnDeleteBook;
 
 	JTable table;
 	JScrollPane tablica;
@@ -34,58 +34,43 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 	JRadioButton rdbtnAutor;
 	JRadioButton rdbtnRokPublikacji;
 
-	Connection conn = null;
 	ResultSet rs = null;
 	PreparedStatement PST = null;
 	String querry;
-	Integer selection;
+	static Integer selection;
+	static String book_title;
+	private Component verticalStrut;
+	private Box verticalBox;
+	private Box verticalBox_1;
 
 	public WindowSemiFin() {
+
 		setBackground(Color.WHITE);
-		conn = DatabaseConnection.ConnectDbs();
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.rowHeights = new int[] { 12, 0, 0, 0, 0, 0, 0, 0, 0 };
+		// gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.1, 0.3, 0.3, 0.3, 0.1 };
-		gridBagLayout.rowWeights = new double[] { 0.2, 0.2, 0.5, 0.1 };
-		// gridBagLayout.columnWidths = new int[] {30, 150, 150, 150, 50};
-		// gridBagLayout.rowHeights = new int[] {30, 30, 300, 30};
+		gridBagLayout.rowWeights = new double[] { 1.0, 0.2, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0 };
 		setLayout(gridBagLayout);
 
 		ButtonGroup searchOption = new ButtonGroup();
-		rdbtnTytul = new JRadioButton("Tytu�", true);
+		rdbtnTytul = new JRadioButton("Tytuł", true);
 		rdbtnTytul.setBackground(Color.WHITE);
 		GridBagConstraints gbc_rdbtnTytul = new GridBagConstraints();
-		// gbc_rdbtnTytul.insets = new Insets(0, 0, 5, 5);
+		gbc_rdbtnTytul.insets = new Insets(0, 0, 5, 5);
 		gbc_rdbtnTytul.gridx = 1;
 		gbc_rdbtnTytul.gridy = 1;
 		this.add(rdbtnTytul, gbc_rdbtnTytul);
 		searchOption.add(rdbtnTytul);
 
-		// btnMojeKonto = new JButton("Moje Konto");
-		// GridBagConstraints gbc_btnMojeKonto = new GridBagConstraints();
-		// //gbc_btnMojeKonto.anchor = GridBagConstraints.WEST;
-		// gbc_btnMojeKonto.fill = GridBagConstraints.VERTICAL;
-		// //gbc_btnMojeKonto.insets = new Insets(0, 0, 0, 5);
-		// gbc_btnMojeKonto.gridx = 2;
-		// gbc_btnMojeKonto.gridy = 5;
-		// this.add(btnMojeKonto, gbc_btnMojeKonto);
-		// btnMojeKonto.addActionListener(this);
-		//
-		// btnWyloguj = new JButton("Wyloguj");
-		// GridBagConstraints gbc_btnWyloguj = new GridBagConstraints();
-		// //gbc_btnWyloguj.insets = new Insets(0, 0, 0, 5);
-		// gbc_btnWyloguj.gridx = 2;
-		// gbc_btnWyloguj.gridy = 5;
-		// this.add(btnWyloguj, gbc_btnWyloguj);
-		// btnWyloguj.addActionListener(this);
-
 		txtSzukaj = new JTextField();
 		txtSzukaj.setColumns(10);
 		GridBagConstraints gbc_txtSzukaj = new GridBagConstraints();
+		gbc_txtSzukaj.insets = new Insets(0, 0, 5, 5);
 		gbc_txtSzukaj.weighty = 1.0;
 		gbc_txtSzukaj.weightx = 1.0;
 		gbc_txtSzukaj.fill = GridBagConstraints.HORIZONTAL;
-		// gbc_txtSzukaj.insets = new Insets(0, 0, 5, 5);
 		gbc_txtSzukaj.gridwidth = 3;
 		gbc_txtSzukaj.gridx = 1;
 		gbc_txtSzukaj.gridy = 0;
@@ -93,7 +78,7 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 
 		btnSzukaj = new JButton("Szukaj");
 		GridBagConstraints gbc_btnSzukaj = new GridBagConstraints();
-		// gbc_btnSzukaj.insets = new Insets(0, 0, 5, 5);
+		gbc_btnSzukaj.insets = new Insets(0, 0, 5, 0);
 		gbc_btnSzukaj.gridx = 4;
 		gbc_btnSzukaj.gridy = 0;
 		this.add(btnSzukaj, gbc_btnSzukaj);
@@ -102,7 +87,7 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 		rdbtnAutor = new JRadioButton("Autor", false);
 		rdbtnAutor.setBackground(Color.WHITE);
 		GridBagConstraints gbc_rdbtnAutor = new GridBagConstraints();
-		// gbc_rdbtnAutor.insets = new Insets(0, 0, 5, 5);
+		gbc_rdbtnAutor.insets = new Insets(0, 0, 5, 5);
 		gbc_rdbtnAutor.gridx = 2;
 		gbc_rdbtnAutor.gridy = 1;
 		this.add(rdbtnAutor, gbc_rdbtnAutor);
@@ -111,7 +96,7 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 		rdbtnRokPublikacji = new JRadioButton("Rok publikacji", false);
 		rdbtnRokPublikacji.setBackground(Color.WHITE);
 		GridBagConstraints gbc_rdbtnRokPublikacji = new GridBagConstraints();
-		// gbc_rdbtnRokPublikacji.insets = new Insets(0, 0, 5, 5);
+		gbc_rdbtnRokPublikacji.insets = new Insets(0, 0, 5, 5);
 		gbc_rdbtnRokPublikacji.gridx = 3;
 		gbc_rdbtnRokPublikacji.gridy = 1;
 		this.add(rdbtnRokPublikacji, gbc_rdbtnRokPublikacji);
@@ -119,26 +104,150 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 
 		tablica = new JScrollPane();
 		GridBagConstraints gbc_tablica = new GridBagConstraints();
-		gbc_tablica.weighty = 1.0;
-		gbc_tablica.weightx = 1.0;
+		gbc_tablica.insets = new Insets(0, 0, 5, 5);
 		gbc_tablica.fill = GridBagConstraints.BOTH;
-		// gbc_tablica.insets = new Insets(0, 0, 5, 5);
 		gbc_tablica.gridwidth = 3;
+		gbc_tablica.gridheight = 6;
 		gbc_tablica.gridx = 1;
 		gbc_tablica.gridy = 2;
 		this.add(tablica, gbc_tablica);
 
+		verticalBox = Box.createVerticalBox();
+		GridBagConstraints gbc_verticalBox = new GridBagConstraints();
+		gbc_verticalBox.insets = new Insets(0, 0, 5, 0);
+		gbc_verticalBox.gridx = 4;
+		gbc_verticalBox.gridy = 2;
+		add(verticalBox, gbc_verticalBox);
+
 		btnWypozycz = new JButton("Wypozycz");
-		GridBagConstraints gbc_btnWypozycz = new GridBagConstraints();
-		// gbc_btnWypozycz.insets = new Insets(0, 0, 5, 5);
-		gbc_btnWypozycz.anchor = GridBagConstraints.SOUTH;
-		gbc_btnWypozycz.gridx = 4;
-		gbc_btnWypozycz.gridy = 2;
-		this.add(btnWypozycz, gbc_btnWypozycz);
+		verticalBox.add(btnWypozycz);
 		btnWypozycz.addActionListener(this);
+
+		if (Window.MUserType == 1) {
+		btnReturnBook = new JButton("Zwróć książkę");
+		verticalBox.add(btnReturnBook);
+		btnReturnBook.addActionListener(this);
+		}
+
+		verticalBox_1 = Box.createVerticalBox();
+		GridBagConstraints gbc_verticalBox_1 = new GridBagConstraints();
+		gbc_verticalBox_1.anchor = GridBagConstraints.SOUTH;
+		gbc_verticalBox_1.insets = new Insets(0, 0, 5, 0);
+		gbc_verticalBox_1.gridx = 4;
+		gbc_verticalBox_1.gridy = 7;
+		add(verticalBox_1, gbc_verticalBox_1);
+
+		if (Window.MUserType == 1) {
+		btnDeleteBook = new JButton("Usuń książkę");
+		verticalBox_1.add(btnDeleteBook);
+		btnDeleteBook.addActionListener(this);
+		
+		verticalStrut = Box.createVerticalStrut(20);
+		GridBagConstraints gbc_verticalStrut = new GridBagConstraints();
+		gbc_verticalStrut.insets = new Insets(0, 0, 0, 5);
+		gbc_verticalStrut.gridx = 1;
+		gbc_verticalStrut.gridy = 8;
+		add(verticalStrut, gbc_verticalStrut);
+		 }
 
 		catalogue();
 
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+		Object source = e.getSource();
+
+		if (source == btnMojeKonto) {
+			WindowAccount WindowAccount = new WindowAccount(Window.MUserID);
+			WindowAccount.setVisible(true);
+
+		} else if (source == btnSzukaj) {
+			searching();
+		} else if (source == btnWypozycz) {
+			wypozycz();
+
+		} else if (source == btnAddBook) {
+			AddBook AddBook = new AddBook();
+			AddBook.setVisible(true);
+		} else if (source == btnReturnBook) {
+			returnBook();
+
+		} else if (source == btnDeleteBook) {
+			usun();
+		}
+	}
+
+	private void usun() {
+
+		Integer row = new Integer(table.getSelectedRow());
+		selection = (Integer) (table.getValueAt(row, 0));
+		book_title = (String) table.getValueAt(row, 1);
+
+		int usuniecie = JOptionPane.showConfirmDialog(null, "Czy na pewno chcesz usunąć ksiazke " + book_title + "?",
+				"Potwierdzenie", JOptionPane.YES_NO_OPTION);
+		if (usuniecie == JOptionPane.YES_OPTION) {
+
+			try {
+				String sql = "DELETE FROM book WHERE title='" + book_title + "'";
+				PST = DatabaseConnection.conn.prepareStatement(sql);
+				PST.executeUpdate();
+
+			} catch (Exception a) {
+				JOptionPane.showMessageDialog(null, a);
+			}
+			try {
+				String sql = "DELETE FROM book_authors WHERE id_book='" + selection + "'";
+				PST = DatabaseConnection.conn.prepareStatement(sql);
+				PST.executeUpdate();
+
+			} catch (Exception a) {
+				JOptionPane.showMessageDialog(null, a);
+			}
+
+			JOptionPane.showMessageDialog(null, "Książka usunięta!");
+		} else {
+			JOptionPane.showMessageDialog(null, "Nie usunięto.");
+		}
+	}
+
+	private void wypozycz() {
+
+		Integer row = new Integer(table.getSelectedRow());
+
+		if (row == -1) {
+			JOptionPane.showMessageDialog(null, "Nie wybrano żadnej ksiązki z listy.");
+		} else {
+			selection = (Integer) (table.getValueAt(row, 0));
+			book_title = (String) table.getValueAt(row, 1);
+
+			if (!table.getValueAt(row, 7).equals("dostepna")) {
+				JOptionPane.showMessageDialog(null, "Ta pozycja jest niedostepna.");
+			} else {
+				if (Window.MUserType == 1) {
+					ChoiceUsers u = new ChoiceUsers();
+					u.setVisible(true);
+				} else {
+
+					int wypozyczenie = JOptionPane.showConfirmDialog(null,
+							"Czy chcesz wypozyczyc ksiazke " + book_title + "?", "Potwierdzenie",
+							JOptionPane.YES_NO_OPTION);
+					if (wypozyczenie == JOptionPane.YES_OPTION) {
+
+						try {
+							String sql = "CALL `sql11171543`.`borrow`(" + selection + ", " + Window.MUserID + ", 3)";
+							PST = DatabaseConnection.conn.prepareStatement(sql);
+							rs = PST.executeQuery();
+							JOptionPane.showMessageDialog(null, "Książka wypożyczona!");
+						} catch (Exception a) {
+							JOptionPane.showMessageDialog(null, "Nie można wypożyczyć. Skontaktuj się z bibliotekarzem");
+						}				
+						
+					} 
+				}
+			}
+		}
 	}
 
 	public void catalogue() {
@@ -146,25 +255,28 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 
 			String sql = "SELECT * from wypozyczalnia2";
 
-			PST = conn.prepareStatement(sql);
+			PST = DatabaseConnection.conn.prepareStatement(sql);
 			rs = PST.executeQuery();
-			
+
 		} catch (Exception a) {
 			JOptionPane.showMessageDialog(null, a);
 		}
 
 		try {
-			table = new JTable(buildTableModel(rs));
+			table = new JTable(SearchTable.buildTableModel(rs));
 			tablica.setViewportView(table);
-			
+
+			PST.close();
+			rs.close();
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+
 		tablica.validate();
 		tablica.revalidate();
 		tablica.repaint();
-		
+
 	}
 
 	public void searching() {
@@ -182,7 +294,7 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 				sql += "where rok like ?";
 			}
 			querry = "%" + txtSzukaj.getText() + "%";
-			PST = conn.prepareStatement(sql);
+			PST = DatabaseConnection.conn.prepareStatement(sql);
 			PST.setString(1, querry);
 			rs = PST.executeQuery();
 
@@ -191,7 +303,10 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 		}
 
 		try {
-			table = new JTable(buildTableModel(rs));
+			table = new JTable(SearchTable.buildTableModel(rs));
+
+			PST.close();
+			rs.close();
 
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
@@ -203,74 +318,56 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 		tablica.repaint();
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-
-		Object source = e.getSource();
-
-		if (source == btnMojeKonto) {
-			WindowAccount WindowAccount = new WindowAccount(Window.MUserID);
-			WindowAccount.setVisible(true);
-
-		} else if (source == btnSzukaj) {
-			searching();
-		} else if (source == btnWypozycz) {
-			wypozycz();
-		}
-	}
-
-	public static DefaultTableModel buildTableModel(ResultSet rs) throws SQLException {
-
-		ResultSetMetaData metaData = rs.getMetaData();
-
-		Vector<String> columnNames = new Vector<String>();
-
-		int columnCount = metaData.getColumnCount();
-
-		for (int column = 1; column <= columnCount; column++) {
-			columnNames.add(metaData.getColumnName(column));
-		}
-
-		// data of the table
-		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
-		while (rs.next()) {
-			Vector<Object> vector = new Vector<Object>();
-			for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-				vector.add(rs.getObject(columnIndex));
-			}
-			data.add(vector);
-		}
-
-		return new SearchTable(data, columnNames);
-	}
-
-	private void wypozycz() {
+	private void returnBook() {
 
 		Integer row = new Integer(table.getSelectedRow());
-		selection = (Integer) (table.getValueAt(row, 0));
-		String book_title = new String();
-		book_title = (String) table.getValueAt(row, 1);
+		String status = (String) table.getValueAt(row, 7);
 
-		if (!table.getValueAt(row, 7).equals("dostepna")) {
-			JOptionPane.showMessageDialog(null, "Ta pozycja jest niedostepna.");
-		} else {
-			int wypozyczenie = JOptionPane.showConfirmDialog(null, "Czy chcesz wypozyczyc ksiazke " + book_title + "?",
-					"Potwierdzenie", JOptionPane.YES_NO_OPTION);
-			if (wypozyczenie == JOptionPane.YES_OPTION) {
+		if (row == -1) {
+			JOptionPane.showMessageDialog(null, "Nie wybrałeś książki z listy.");
+		}
+		else if (!status.equals("wypozyczona"))
+		{
+			JOptionPane.showMessageDialog(null, "Ta pozycja nie jest wypożyczona.");
+		}
+		else {
+			selection = (Integer) (table.getValueAt(row, 0));
+			book_title = (String) table.getValueAt(row, 1);
 
-				try {
-					String sql = "CALL `sql11171543`.`borrow`(" + selection + ", " + Window.MUserID + ", 3)";
-					PST = conn.prepareStatement(sql);
-					rs = PST.executeQuery();
+			String imie = "";
+			String nazwisko = "";
 
-				} catch (Exception a) {
-					JOptionPane.showMessageDialog(null, a);
+			try {
+
+				String sql = "select imie im, nazwisko naz  from sql11171543.loan_list_open where status_id=3 and book_id='"
+						+ selection + "' order by data desc";
+				Statement PS = DatabaseConnection.conn.createStatement();
+				ResultSet rs1 = PS.executeQuery(sql);
+
+				if (rs1.next()) {
+					imie = rs1.getString("im");
+					nazwisko = rs1.getString("naz");
+
 				}
 
-				JOptionPane.showMessageDialog(null, "Książka wypożyczona!");
-			} else {
-				JOptionPane.showMessageDialog(null,
-						"Wystapił błąd. Sprobuj ponownie pozniej lub skontaktuj się z bibliotekarzem.");
+				int wypozyczenie = JOptionPane.showConfirmDialog(null, "Czy chcesz zwrócić książkę \"" + book_title
+						+ "\" wypożyczoną przez " + imie + " " + nazwisko + " ?", "Potwierdzenie",
+						JOptionPane.YES_NO_OPTION);
+
+				if (wypozyczenie == JOptionPane.YES_OPTION) {
+
+					sql = "CALL `sql11171543`.`rtrn_book`(" + selection + ")";
+					PST = DatabaseConnection.conn.prepareStatement(sql);
+					rs = PST.executeQuery();
+
+					JOptionPane.showMessageDialog(null, "Książka zwrócona!");
+
+					PST.close();
+					PS.close();
+					rs.close();
+				}
+			} catch (Exception a) {
+				JOptionPane.showMessageDialog(null, "Coś poszło nie tak.");
 			}
 		}
 	}

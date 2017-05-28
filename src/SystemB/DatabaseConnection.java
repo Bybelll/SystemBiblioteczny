@@ -5,10 +5,12 @@ import java.sql.DriverManager;
 
 import javax.swing.JOptionPane;
 
+
 public class DatabaseConnection {
 
-	Connection conn = null;
-
+	static Connection conn;
+	
+	
 	public static Connection ConnectDbs() {
 
 		try {
@@ -17,6 +19,7 @@ public class DatabaseConnection {
 					"jdbc:mysql://sql11.freesqldatabase.com/sql11171543?characterEncoding=UTF-8", "sql11171543",
 					"SMbd9wcgnH");
 			return conn;
+			
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e);
 			return null;
