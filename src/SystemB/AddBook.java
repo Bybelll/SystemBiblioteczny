@@ -21,6 +21,10 @@ import javax.swing.Box;
 import java.awt.Component;
 import java.awt.Dimension;
 
+/**
+ * Class responsible for adding books
+ */
+
 public class AddBook extends JPanel implements ActionListener {
 
 	private JTextField Title;
@@ -242,14 +246,12 @@ public class AddBook extends JPanel implements ActionListener {
 		FillComboNazAu();
 	}
 
-	private void Addbook() { // Jak sama nazwa wskazuje, dodaje ksiazki ;)
+	/*
+	 * */
+	private void Addbook() {
 		String tytul = Title.getText();
 
-		int rok = Integer.parseInt(Rok.getText()); // Tutaj przypisujemy
-													// wartosci wpisane w pola
-													// do Stringow, aby uzyc je
-													// pozniej do aktualizacji w
-													// bazie danych.
+		int rok = Integer.parseInt(Rok.getText()); 
 		int isbn = Integer.parseInt(Isbn.getText());
 		String wydawca = (String) ComWyd.getSelectedItem();
 		String kategoria = (String) comboBoxKat.getSelectedItem();
@@ -258,20 +260,13 @@ public class AddBook extends JPanel implements ActionListener {
 
 			String sql5 = "SELECT * FROM category WHERE name='" + kategoria + "'";
 			PST = DatabaseConnection.conn.prepareStatement(sql5);
-			RS = PST.executeQuery(sql5); // Szukamy id odpowiadajace kategorii
-											// wybranej w comboboxie i
-											// przypisujemy do stringa
+			RS = PST.executeQuery(sql5); 
 			RS.next();
 			cat_id = RS.getString("id_cat");
 			PST.close();
 			RS.close();
 
-			String sql9 = "SELECT count(*) as cnt FROM publisher WHERE name='" + wydawca + "'"; // sprawdzamy
-																								// czy
-																								// wydawca
-																								// istnieje
-																								// w
-																								// bazie
+			String sql9 = "SELECT count(*) as cnt FROM publisher WHERE name='" + wydawca + "'"; 
 			PST = DatabaseConnection.conn.prepareStatement(sql9);
 			RS = PST.executeQuery(sql9);
 			Integer check2 = null;
@@ -280,7 +275,7 @@ public class AddBook extends JPanel implements ActionListener {
 			}
 			PST.close();
 			RS.close();
-			if (check2 == 1) // jezeli wydawca istnieje to pobieramy jego id
+			if (check2 == 1) 
 			{
 				String sql10 = "SELECT * FROM publisher WHERE name='" + wydawca + "'";
 				PST = DatabaseConnection.conn.prepareStatement(sql10);
@@ -308,8 +303,7 @@ public class AddBook extends JPanel implements ActionListener {
 
 			String sql12 = "INSERT INTO book (title, pub_year, isbn, id_pub, id_cat) VALUES (?,?,?,?,?)";
 
-			// Tu dodajemy ksiazke do bazy uzywajac wczesniejszych stringow
-
+			/* Adding book using String tytul,rok,isbn,pub_id,cat_id*/
 			PS = DatabaseConnection.conn.prepareStatement(sql12);
 			PS.setString(1, tytul);
 			PS.setInt(2, rok);
@@ -331,8 +325,7 @@ public class AddBook extends JPanel implements ActionListener {
 				Integer id = entry.getKey();
 				String autorIm = (String) entry.getValue().getSelectedItem();
 				String autorNaz = (String) AuSnameMap.get(id).getSelectedItem();
-				
-				
+
 				String sql6 = "SELECT count(*) as cnt FROM author WHERE fname='" + autorIm + "' AND sname='" + autorNaz
 						+ "'";
 				PST = DatabaseConnection.conn.prepareStatement(sql6);
@@ -373,26 +366,24 @@ public class AddBook extends JPanel implements ActionListener {
 					PS.executeUpdate();
 					PS.close();
 				}
-					String sql8 = "SELECT * FROM author WHERE fname='" + autorIm + "' AND sname='" + autorNaz + "'";
-					PST = DatabaseConnection.conn.prepareStatement(sql8);
-					RS = PST.executeQuery(sql8);
-					RS.next();
-					aut_id = RS.getString("id_aut");
-					PST.close();
-					RS.close();
+				String sql8 = "SELECT * FROM author WHERE fname='" + autorIm + "' AND sname='" + autorNaz + "'";
+				PST = DatabaseConnection.conn.prepareStatement(sql8);
+				RS = PST.executeQuery(sql8);
+				RS.next();
+				aut_id = RS.getString("id_aut");
+				PST.close();
+				RS.close();
 
-					String sql_ba = "INSERT INTO book_authors (id_book, id_aut) VALUES (?,?)";
-				
-					PS = DatabaseConnection.conn.prepareStatement(sql_ba);
-					PS.setString(1, book_id);
-					PS.setString(2, aut_id); // zapisujemy do tabeli
-												// book_authors id
-												// autora i ksiazki
-					PS.executeUpdate();
-					PS.close();
-				}
+				String sql_ba = "INSERT INTO book_authors (id_book, id_aut) VALUES (?,?)";
 
-			
+				PS = DatabaseConnection.conn.prepareStatement(sql_ba);
+				PS.setString(1, book_id);
+				PS.setString(2, aut_id); // zapisujemy do tabeli
+											// book_authors id
+											// autora i ksiazki
+				PS.executeUpdate();
+				PS.close();
+			}
 
 			JOptionPane.showMessageDialog(this, "Dodano pomyślnie.");
 

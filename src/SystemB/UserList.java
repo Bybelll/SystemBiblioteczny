@@ -210,10 +210,6 @@ public class UserList extends JPanel implements ActionListener {
 														// arugment dla
 														// WindowAccount
 		userDetails = new WindowAccount(userID);
-		// searchUsers();
-		// tablica.validate();
-		// tablica.revalidate();
-		// tablica.repaint();
 		detale.removeAll();
 		detale.add(userDetails);
 		detale.validate();
