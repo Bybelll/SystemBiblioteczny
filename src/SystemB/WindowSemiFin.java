@@ -24,6 +24,9 @@ import javax.swing.Box;
 
 public class WindowSemiFin extends JPanel implements ActionListener {
 
+	static Integer selection;
+	static String book_title;
+	
 	JTextField txtSzukaj;
 	JButton btnSzukaj, btnMojeKonto, btnWypozycz, btnAddBook, btnReturnBook, btnDeleteBook;
 
@@ -37,8 +40,7 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 	ResultSet rs = null;
 	PreparedStatement PST = null;
 	String querry;
-	static Integer selection;
-	static String book_title;
+
 	private Component verticalStrut;
 	private Box verticalBox;
 	private Box verticalBox_1;
@@ -179,6 +181,10 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 		}
 	}
 
+	
+	/*
+	 * usuwawybrana książkę z listy
+	 */
 	private void usun() {
 
 		Integer row = new Integer(table.getSelectedRow());
@@ -212,6 +218,12 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 		}
 	}
 
+	
+	/*
+	 * wypożycza ksiązkę na konto zalogowanego użytkownika, jesli użytkownik ten jest adminem (MUserType = 1)
+	 * to wyskakuje okno z listą osób do wyboru na czyje konto wypożyczyć książkę
+	 * fukncja używa procedury "borrow"  
+	 */
 	private void wypozycz() {
 
 		Integer row = new Integer(table.getSelectedRow());
@@ -250,6 +262,10 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 		}
 	}
 
+	
+	/*
+	 * pobiera i wyświetla wtabeli wszystkie ksiązki
+	 */
 	public void catalogue() {
 		try {
 
@@ -279,6 +295,10 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 
 	}
 
+	/*
+	 * wyszukuje w bazie ksiązki według: tytułu, autora, roku wydania
+	 * wyświetla je w tabeli
+	 */
 	public void searching() {
 
 		try {
@@ -318,6 +338,12 @@ public class WindowSemiFin extends JPanel implements ActionListener {
 		tablica.repaint();
 	}
 
+	
+	/*
+	 * zwraca wybraną książkę
+	 * opcja dostępna tylka dla admina (MTypeUser = 1)
+	 * wykorzystuje procedure "rtrn_book"
+	 */
 	private void returnBook() {
 
 		Integer row = new Integer(table.getSelectedRow());

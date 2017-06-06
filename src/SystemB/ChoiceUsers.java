@@ -127,12 +127,14 @@ public class ChoiceUsers extends JFrame implements ActionListener {
 
 	}
 
+	
+	/*
+	 *  funkcja wysyła zapytanie o podstawowe dane identyfikacyjne
+	 *	 uzytkowników: id, imie, nazwisko
+	 *	 tworzy tabele z wynikami zapytania
+	 *	 dodaje tabele do JScrollPane tablica
+	 */
 	public void searchUsers() {
-
-		// funkcja wysyła zapytanie o podstawowe dane identyfikacyjne
-		// uzytkowników: id, imie, nazwisko
-		// tworzy tabele z wynikami zapytania
-		// dodaje tabele do JScrollPane tablica
 
 		try {
 

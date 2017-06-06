@@ -15,7 +15,7 @@ import java.awt.Font;
 
 public class WindowAccount extends JPanel implements ActionListener {
 
-	// JFrame frame;
+
 	JTable table, table2;
 	private JScrollPane tablica, aktualne;
 
@@ -292,6 +292,24 @@ public class WindowAccount extends JPanel implements ActionListener {
 		loan_current(userID);
 	}
 
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+		Object source = e.getSource();
+
+		if (source == btnZmieHaso) {
+
+			PassChange Window = new PassChange();
+			Window.setVisible(true);
+		} else if (source == btnAcc) {
+			ChangeData(userID);
+		} else if (source == btnResetHaslo) {
+			PassReset(userID);
+		}
+
+	}
+	
+	
 	public void wysw(String userID) {
 
 		try {
@@ -327,13 +345,13 @@ public class WindowAccount extends JPanel implements ActionListener {
 		}
 	}
 
+	
+	/*
+	 * funkcja pobiera dane z widoku "historia" filtrujac wedug wybranego
+	 * uzytkownika dane z sql przetwarzane sa na tabele tabela table jest
+	 * umieszczana w JScrollPane tablica, odswiezamy JScrollPane
+	 */
 	private void loan(String userID) {
-
-		/*
-		 * funkcja pobiera dane z widoku "historia" filtrujac wedug wybranego
-		 * uzytkownika dane z sql przetwarzane sa na tabele tabela table jest
-		 * umieszczana w JScrollPane tablica, odswiezamy JScrollPane
-		 */
 
 		try {
 
@@ -347,8 +365,8 @@ public class WindowAccount extends JPanel implements ActionListener {
 		try {
 			table = new JTable(SearchTable.buildTableModel(rs));
 			tablica.setViewportView(table);
+			
 		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		tablica.validate();
@@ -356,17 +374,17 @@ public class WindowAccount extends JPanel implements ActionListener {
 		tablica.repaint();
 
 	}
-
+	
+	
+	/*
+	 * funkcja pobiera dane z widoku "loan_list_open" filtrujac wedug
+	 * wybranego uzytkownika dane z sql przetwarzane sa na tabele tabela
+	 * table jest umieszczana w JScrollPane tablica, odswiezamy JScrollPane
+	 * 
+	 * widok loan_list_open filtruje wypozyczenia w bazie danych i pokazuje
+	 * tylko te loan_id do ktorych nie jest przypisany zwrot
+	 */
 	private void loan_current(String userID) {
-
-		/*
-		 * funkcja pobiera dane z widoku "loan_list_open" filtrujac wedug
-		 * wybranego uzytkownika dane z sql przetwarzane sa na tabele tabela
-		 * table jest umieszczana w JScrollPane tablica, odswiezamy JScrollPane
-		 * 
-		 * widok loan_list_open filtruje wypozyczenia w bazie danych i pokazuje
-		 * tylko te loan_id do ktorych nie jest przypisany zwrot
-		 */
 
 		try {
 
@@ -384,7 +402,7 @@ public class WindowAccount extends JPanel implements ActionListener {
 			table2 = new JTable(SearchTable.buildTableModel(rs));
 			aktualne.setViewportView(table2);
 		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		}
 		aktualne.validate();
@@ -393,32 +411,16 @@ public class WindowAccount extends JPanel implements ActionListener {
 
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
 
-		Object source = e.getSource();
-
-		if (source == btnZmieHaso) {
-
-			PassChange Window = new PassChange();
-			Window.setVisible(true);
-		} else if (source == btnAcc) {
-			ChangeData(userID);
-		} else if (source == btnResetHaslo) {
-			PassReset(userID);
-		}
-
-	}
-
+	/*
+	 * funkcja resetowania hasła dostępna pod przyciskim tylko z poziomu
+	 * bibliotekarza sprawdza również na poziomie funkcji, czy zalogowany
+	 * jest bibliotekarz wyswietla komunikat z potwierdzeniem akcji, w
+	 * przypadku potwierdzenia, wysyla polecenie do SQL ustawienie hasla
+	 * domyslnego Gutenberg123 dla uzytkownika o ID z aktualnego rekordu
+	 */
 	private void PassReset(String userID) {
 
-		/*
-		 * funkcja resetowania hasła dostępna pod przyciskim tylko z poziomu
-		 * bibliotekarza sprawdza również na poziomie funkcji, czy zalogowany
-		 * jest bibliotekarz wyswietla komunikat z potwierdzeniem akcji, w
-		 * przypadku potwierdzenia, wysyla polecenie do SQL ustawienie hasla
-		 * domyslnego Gutenberg123 dla uzytkownika o ID z aktualnego rekordu
-		 */
 		if (Window.MUserType == 1) {
 			int confirm = JOptionPane.showConfirmDialog(null,
 					"Czy chcesz zresetować hasło dla użytkownika: " + imie.getText() + " " + nazwisko.getText() + "?",
@@ -445,13 +447,14 @@ public class WindowAccount extends JPanel implements ActionListener {
 		}
 	}
 
+	/*
+	 * Funkcja zmiany danych odczytuje aktualne wartosci z pol w formularzu
+	 * i przypisuje je do zmiennych wysyla polecenie do SQL - aktualizacja
+	 * rekordu o podanym userID do zapytania dodawane sa dane ze zmiennych,
+	 * z poszczegolnych pol formularza
+	 */
 	private void ChangeData(String userID) {
-		/*
-		 * Funkcja zmiany danych odczytuje aktualne wartosci z pol w formularzu
-		 * i przypisuje je do zmiennych wysyla polecenie do SQL - aktualizacja
-		 * rekordu o podanym userID do zapytania dodawane sa dane ze zmiennych,
-		 * z poszczegolnych pol formularza
-		 */
+
 
 		String simie = imie.getText();
 		String snazwisko = nazwisko.getText();
@@ -492,31 +495,5 @@ public class WindowAccount extends JPanel implements ActionListener {
 
 	}
 
-	//poniższy fragment można już chyba wywalić, ale zostawiam dopóki nie przetestuje go więcej osób
 	
-	/*private static DefaultTableModel buildTableModel(ResultSet rs) throws SQLException {
-
-		ResultSetMetaData metaData = rs.getMetaData();
-
-		// names of columns
-		Vector<String> columnNames = new Vector<String>();
-
-		int columnCount = metaData.getColumnCount();
-
-		for (int column = 1; column <= columnCount; column++) {
-			columnNames.add(metaData.getColumnName(column));
-		}
-
-		// data of the table
-		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
-		while (rs.next()) {
-			Vector<Object> vector = new Vector<Object>();
-			for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-				vector.add(rs.getObject(columnIndex));
-			}
-			data.add(vector);
-		}
-
-		return new SearchTable(data, columnNames);
-	}*/
 }

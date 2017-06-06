@@ -13,6 +13,10 @@ public class SearchTable extends DefaultTableModel{
         super(data,columnNames);
     }       
     
+    
+    /*
+     * nadpisanie metody aby tabela była nieedytowalna
+     */
     @Override
     public boolean isCellEditable(int row, int column) {
         return false;

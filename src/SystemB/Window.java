@@ -21,13 +21,14 @@ import java.awt.Component;
 
 public class Window extends JFrame implements ActionListener {
 
+	static String Mlogin;
+	static String MUserID;
+	static int MUserType;
+	
 	JButton bSingUp, bSignIn;
 	JLabel lWelcome;
 	JLabel lLogin, lPassword;
 	JTextField tLogin, tPassword;
-	static String Mlogin;
-	static String MUserID;
-	static int MUserType;
 
 	ResultSet RS = null;
 	PreparedStatement PST = null;
